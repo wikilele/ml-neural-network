@@ -8,15 +8,27 @@ class Dataset():
 
     def shuffle(self):
         # random shuffle of the data
-        pass
+        random.shuffle(self.data_set)
+        return self
 
     def size(self):
         # returns the size of the data
-        return 0
+        return len(self.data_set)
 
     def batch(self,batch_size):
-        # returns an iterator
-        pass       
+        # returns a generator
+        left_index = 0
+        right_index = batch_size
+
+        while right_index < self.size():
+            yield self.data_set[left_index:right_index]
+            left_index = right_index
+            right_index = left_index + batch_size
+        
+        
+        yield self.data_set[left_index:self.size()]
+        
+               
 
     def _load(self,datapath):
         # this method must be implemented in the sublcasses

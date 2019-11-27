@@ -1,3 +1,5 @@
 __pycache__
 monks-1.train
 ML-CUP19-TR.csv
+tests
+.pytest_cache
