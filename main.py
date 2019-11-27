@@ -4,7 +4,7 @@ import datasets as ds
 
 def main():
 
-    dataset = ds.load('monk1.train')
+    dataset = ds.load('monks-1.train')
     dataset.shuffle() # shuffles the dataset
     dataset.size()
     dataset.batch(2) # returning an iterator which produced batches of  size 2
