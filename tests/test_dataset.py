@@ -1,5 +1,5 @@
 import unittest
-from datasets.Dataset import *
+from datasets.dataset import *
 
 class TestDataset(unittest.TestCase):
     def setUp(self):

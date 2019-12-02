@@ -1,4 +1,4 @@
-from .Dataset import MonkDataset
+from .dataset import MonkDataset
 
 def load(data_path):
     # initialize and returns a dataset class
