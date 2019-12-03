@@ -16,17 +16,10 @@ class Neuron(InputNeuron):
     def compute_output(self, input):
         return self.activation_function.compute_output(net_input(input))
     
-<<<<<<< HEAD
     def net_input(inputs):
         weighted_sum = 0
         for i in range(len(inputs)):
             weighted_sum += self.weights[i]*inputs[i]
-=======
-    def net_input(input):
-        weighted_sum = 0;
-        for i in range(len(input)):
-            weighted_sum += self.weights[i]*input[i];
->>>>>>> fb562e4b38623fee0f7f127e3dd00fc7da927af9
         return weighted_sum + self.bias
 
     def dE_dout(self,target_output):
