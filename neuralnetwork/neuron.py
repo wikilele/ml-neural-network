@@ -8,9 +8,9 @@ class InputNeuron:
 
 class Neuron(InputNeuron):
 
-    def __init__(self, bias, weigths, activation_function):
+    def __init__(self, bias, weights, activation_function):
         self.bias = bias
-        self. weights =  weights
+        self.weights =  weights
         self.activation_function = activation_function
         self.output = None
     

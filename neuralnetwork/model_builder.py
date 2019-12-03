@@ -23,7 +23,10 @@ class ModelBuilder():
         print("hidden layer" + str(units) + " activation " + activation) 
         hidden_layer = []
         for i in range(units):
-            hidden_layer.append(Neuron(self.ws.get_bias(),self.ws.get_weights(len(self.model[-1])), Sigmoid()))
+            bias = self.ws.get_bias()
+            weights = self.ws.get_weights(len(self.model[-1]))
+            activation_function = Sigmoid()
+            hidden_layer.append( Neuron(bias,weights,activation_function ))
         
         self.model.append(hidden_layer)
         return self
@@ -32,7 +35,10 @@ class ModelBuilder():
         print("output layer" + str(units) + " activation " + activation)
         output_layer = []
         for i in range(units):
-            output_layer.append(OutputNeuron(self.ws.get_bias(),self.ws.get_weights(len(self.model[-1])), Sigmoid()))
+            bias = self.ws.get_bias()
+            weights = self.ws.get_weights(len(self.model[-1]))
+            activation_function = Sigmoid()
+            output_layer.append( Neuron(bias,weights,activation_function ))
         
         self.model.append(output_layer)
         return self

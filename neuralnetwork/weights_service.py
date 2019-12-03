@@ -7,12 +7,12 @@ class WeightsService:
         self.upper_bound = upper_bound
     
     def get_bias(self):
-        return get_random_value()
+        return self.get_random_value()
     
     def get_weights(self,weights_number):
         weights = []
         for i in range(weights_number):
-            weights.append(get_random_value())
+            weights.append(self.get_random_value())
         return weights
 
     def get_random_value(self):
