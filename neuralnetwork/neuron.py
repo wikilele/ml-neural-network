@@ -9,9 +9,9 @@ class Neuron:
         return self.activation_function(net_input(inputs))
     
     def net_input(inputs):
-        weighted_sum = 0;
+        weighted_sum = 0
         for i in range(len(inputs)):
-            weighted_sum += self.weights[i]*inputs[i];
+            weighted_sum += self.weights[i]*inputs[i]
         return weighted_sum + self.bias
     
     def __str__(self):
