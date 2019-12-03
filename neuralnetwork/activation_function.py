@@ -1,5 +1,13 @@
 import math
 
+def get_activation_function(ftype):
+    if ftype == 'sigmoid':
+        return Sigmoid()
+    elif ftype == 'linear':
+        return Linear()
+    else:
+        return ActivationFunction()
+
 class ActivationFunction:
 
     def compute_output(self, input):
@@ -14,3 +22,10 @@ class Sigmoid(ActivationFunction):
     
     def first_derivative(self, input):
         return input * (1 - input)
+
+class Linear(ActivationFunction):
+    def compute_output(self, input):
+        return input
+    
+    def first_derivative(self, input):
+        return 1
