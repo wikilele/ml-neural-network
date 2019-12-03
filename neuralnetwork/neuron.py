@@ -1,8 +1,9 @@
 class InputNeuron:
 
     def __init__(self):
+        pass
 
-    def compute_output(self, input)
+    def compute_output(self, input):
         return input
 
 class Neuron(InputNeuron):
@@ -41,24 +42,24 @@ class Neuron(InputNeuron):
     def __str__(self):
         return "Bias: " + self.bias + "Weights: " + (str(float(w)) for w in self.weights)
     
-    class OutputNeuron(Neuron):
+class OutputNeuron(Neuron):
 
-        def __init__(self, bias, weights, activation_function):
-            Neuron.__init__(self, bias, weights, activation_function)
-            self.back_prop_delta = None
-            self.error_delta  = None
+    def __init__(self, bias, weights, activation_function):
+        Neuron.__init__(self, bias, weights, activation_function)
+        self.back_prop_delta = None
+        self.error_delta  = None
 
-        def compute_back_prop_delta(self, target):
-            pass
+    def compute_back_prop_delta(self, target):
+        pass
 
-        def compute_error_delta(self, target):
-            pass
+    def compute_error_delta(self, target):
+        pass
 
-        def mean_square_error(self, target):
-            return 0.5*self.error_delta^2
+    def mean_square_error(self, target):
+        return 0.5*self.error_delta^2
 
-        def root_mean_square_error(self, target)
-            return math.root(self.mean_square_error(self, target))
+    def root_mean_square_error(self, target):
+        return math.root(self.mean_square_error(self, target))
 
-        def mean_euclidian_error(self, target)
-            pass
+    def mean_euclidian_error(self, target):
+        pass
