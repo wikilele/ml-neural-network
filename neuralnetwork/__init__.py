@@ -1,4 +1,4 @@
-from .ModelBuilder import ModelBuilder
+from .model_builder import ModelBuilder
 
 
 mb = ModelBuilder()

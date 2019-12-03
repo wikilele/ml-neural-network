@@ -1,4 +1,4 @@
-from .Model import Model
+from .model import Model
 from .neuron import *
 
 class ModelBuilder():
