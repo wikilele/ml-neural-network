@@ -28,17 +28,23 @@ class Neuron(InputNeuron):
         return - (target_output- self.output)
 
     def dout_dnet(self):
-        ''' first derivative of logistic function '''
+        ''' first derivative of the activation function '''
         return activation_function.first_derivative(self.output)
 
     def dnet_dwj(self,j):
         ''' just input at position j'''
         return self.inputs[j]
+    
+    def compute_back_prop_delta(self, prev_deltas, weights):
+        sum = 0
+        for i in range(len(prev_deltas)):
+            sum += prev_deltas[i]*weights[i]
+        return sum*self.dout_dnet()
 
-    def dE_dwj(self,target_output,j):
-        ''' by chain rule ''' 
-        return self.dE_dout(target_output) * self.dout_dnet() * self.dnet_dwj(j)
-
+    # def dE_dwj(self,target_output,j):
+    #   ''' by chain rule ''' 
+    #    return self.dE_dout(target_output) * self.dout_dnet() * self.dnet_dwj(j)
+    
     def __str__(self):
         return "Bias: " + self.bias + "Weights: " + (str(float(w)) for w in self.weights)
     
@@ -50,7 +56,7 @@ class OutputNeuron(Neuron):
         self.error_delta  = None
 
     def compute_back_prop_delta(self, target):
-        pass
+        return self.dE_dout(target)*self.dout_dnet()
 
     def compute_error_delta(self, target):
         pass
