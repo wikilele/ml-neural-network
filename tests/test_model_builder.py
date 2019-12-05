@@ -11,16 +11,16 @@ class TestModelBuilder(unittest.TestCase):
 
         self.mb.input_layer(3)
 
-        assert len(self.mb.model[0]) == 3
-        assert type(self.mb.model[0][0]) == InputNeuron
+        assert len(self.mb.model[0].neurons) == 3
+        assert type(self.mb.model[0].neurons[0]) == InputNeuron
     
     def test_hidden_layer(self):
 
         self.mb.input_layer(3)
         self.mb.hidden_layer(5)
 
-        assert len(self.mb.model[-1]) == 5
-        assert type(self.mb.model[-1][0]) == Neuron
+        assert len(self.mb.model[-1].neurons) == 5
+        assert type(self.mb.model[-1].neurons[0]) == Neuron
     
     def test_output_layer(self):
 
@@ -28,23 +28,23 @@ class TestModelBuilder(unittest.TestCase):
         self.mb.hidden_layer(5)
         self.mb.output_layer(2)
 
-        assert len(self.mb.model[-1]) == 2
-        assert type(self.mb.model[-1][0]) == OutputNeuron
+        assert len(self.mb.model[-1].neurons) == 2
+        assert type(self.mb.model[-1].neurons[0]) == OutputNeuron
     
     def test_activation_function_init(self):
 
         self.mb.input_layer(3)
         self.mb.hidden_layer(5,activation='linear')     
-        assert type(self.mb.model[-1][0].activation_function) == Linear
+        assert type(self.mb.model[-1].neurons[0].activation_function) == Linear
 
         self.mb.output_layer(2,activation='sigmoid')
-        assert type(self.mb.model[-1][0].activation_function) == Sigmoid
+        assert type(self.mb.model[-1].neurons[0].activation_function) == Sigmoid
     
     def test_weights_init(self):
 
         self.mb.input_layer(3)
         self.mb.hidden_layer(5)      
-        assert len(self.mb.model[-1][0].weights) == 3
+        assert len(self.mb.model[-1].neurons[0].weights) == 3
 
         self.mb.output_layer(2)
-        assert len(self.mb.model[-1][0].weights) == 5
+        assert len(self.mb.model[-1].neurons[0].weights) == 5
