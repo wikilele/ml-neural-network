@@ -13,10 +13,13 @@ class Neuron(InputNeuron):
         self.weights =  weights
         
         self.activation_function = activation_function
+        self.inputs = None
         self.output = None
     
     def compute_output(self, input):
-        return self.activation_function.compute_output(self.net_input(input))
+        self.inputs = input
+        self.output = self.activation_function.compute_output(self.net_input(input))
+        return self.output
     
     def net_input(self,inputs):
         weighted_sum = 0
@@ -30,7 +33,7 @@ class Neuron(InputNeuron):
 
     def dout_dnet(self):
         ''' first derivative of the activation function '''
-        return activation_function.first_derivative(self.output)
+        return self.activation_function.first_derivative(self.output)
 
     def dnet_dwj(self,j):
         ''' just input at position j'''

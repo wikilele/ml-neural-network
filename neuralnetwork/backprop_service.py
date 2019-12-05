@@ -2,13 +2,13 @@ import numpy as np
 
 class BackPropService:
 
-    def __init__(self, model, deltas):
+    def __init__(self, model):
         # this matrix stores the DELTAS used to update the weights
         # do not confuse DELTA with delta
         # DELTA are defined as delta * input from previous node
         # delta is used to compute the DELTA and changes between hidden and output neurons
         self.DELTAS = []
-        prev_len = len(model[0])
+        prev_len = len(model[0].neurons)
         for layer in model[1:]:
             self.DELTAS.append(np.zeros( (len(layer.neurons), prev_len) ))
             prev_len = len(layer.neurons)
@@ -18,13 +18,13 @@ class BackPropService:
     
     def _update_DELTAS_matrix(self,deltas,layer_index, layer):
         # for each computed delta (one delta per neuron)
-        for i in range(len(prev_deltas)):
+        for i in range(len(deltas)):
             # for each weight j of the neuron i. 
             for j in range(np.size(self.DELTAS[layer_index], 1)):
-                # update the DELTA of weight j from neuron i of layer
-                self.DELTAS[-1][i][j] += prev_deltas[i] * layer[i].dnet_dwj(j)
+                # update the DELTA of weight j from neuron i of layer     
+                self.DELTAS[-1][i][j] += deltas[i] * layer.neurons[i].dnet_dwj(j)
 
-    def compute_deltas(self, model, output):
+    def compute_deltas(self, model, target_output):
         '''
         this function will be called each time the model is feeded with the input.
         the function will compute the DELTAS for the back propagation.
@@ -40,11 +40,12 @@ class BackPropService:
         weights = []
 
         # deltas for output layer
-        for i in range(len(output_layer)):
+        for i in range(len(output_layer.neurons)):
             # for each neuron in the output layer we get it's delta
-            o_delta =  output_layer[i].compute_back_prop_delta(output[i])
-            np.append(prev_deltas, o_delta)
-          
+            o_delta =  output_layer.neurons[i].compute_back_prop_delta(target_output[i])
+            prev_deltas = np.append(prev_deltas, o_delta)
+            
+        
         self._update_DELTAS_matrix(prev_deltas, -1, output_layer)
 
         #deltas for hidden layers
@@ -56,16 +57,16 @@ class BackPropService:
             # to keep the deltas in this iteration
             current_deltas = np.array([])
             # for each neuron in the hidden layer
-            for neuron_index in range(len(layer)):
+            for neuron_index in range(len(layer.neurons)):
                 # for each neuron in the previous layer (remember the model here is reversed so output layer comes before hidden)
-                for prev_neuron in rev_hidden_layers[layer_index-1]:
+                for prev_neuron in rev_hidden_layers[layer_index-1].neurons:
                     # we get the weight between our current neuron (neuron index)
                     # and the neuron in the previous layer
                     weights.append(prev_neuron.weights[neuron_index])
 
                 # get the delta from the hidden neuron
                 h_delta = neuron.compute_back_prop_delta(prev_deltas, weights)
-                np.append(current_deltas, h_delta)
+                current_deltas = np.append(current_deltas, h_delta)
             
             self._update_DELTAS_matrix(current_deltas, -layer_index, layer)
             

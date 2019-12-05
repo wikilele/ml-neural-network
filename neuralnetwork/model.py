@@ -7,8 +7,8 @@ class Model():
         for i in range(epochs):
             for batch in data_iterator:
                 for pattern in batch:
-                    output = self.feed_forward(pattern)
-                    backprop_service.compute_deltas(self.model, output)
+                    self.feed_forward(pattern)
+                    backprop_service.compute_deltas(self.model, target_output)
 
                 self.model = backprop_service.update_weights(self.model)
 
