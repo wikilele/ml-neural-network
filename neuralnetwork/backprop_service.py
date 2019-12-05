@@ -3,41 +3,73 @@ import numpy as np
 class BackPropService:
 
     def __init__(self, model, deltas):
-
-        self.deltas = []
+        # this matrix stores the DELTAS used to update the weights
+        # do not confuse DELTA with delta
+        # DELTA are defined as delta * input from previous node
+        # delta is used to compute the DELTA and changes between hidden and output neurons
+        self.DELTAS = []
         prev_len = len(model[0])
         for layer in model[1:]:
-            self.deltas.append(np.zeros(len(layer.neurons), prev_len ))
+            self.DELTAS.append(np.zeros( (len(layer.neurons), prev_len) ))
             prev_len = len(layer.neurons)
 
     def update_weights(self, model):
+        pass
+    
+    def _update_DELTAS_matrix(self,deltas,layer_index, layer):
+        # for each computed delta (one delta per neuron)
+        for i in range(len(prev_deltas)):
+            # for each weight j of the neuron i. 
+            for j in range(np.size(self.DELTAS[layer_index], 1)):
+                # update the DELTA of weight j from neuron i of layer
+                self.DELTAS[-1][i][j] += prev_deltas[i] * layer[i].dnet_dwj(j)
 
     def compute_deltas(self, model, output):
-        prev_deltas = np.array(len(output))
+        '''
+        this function will be called each time the model is feeded with the input.
+        the function will compute the DELTAS for the back propagation.
+        first the output deltas will be computed and then backwards the hidden deltas
+        from the last hidden layer to the first one
+        '''
+        # we need something to keep the deltas of the previous layer
+        prev_deltas = np.array([])
         output_layer = model[-1]
+        # this variable keep the model reverted so that we can iterate on that for the backprop
+        # the output layer is considered, the input layer is removed cause it's not needed
         rev_hidden_layers = reversed(model[1:])
         weights = []
 
-        #deltas for output layer
-        for i in range(output_layer):
-            prev_deltas[i] = output_layer[i].compute_back_prop_delta(output[i])
-        
-        for i in range(len(prev_deltas)):
-            for j in range(np.size(self.deltas[-1], 0)): #check dimensions
-                self.deltas[-1][i][j] += prev_deltas[i]*output_layer[i].dnet_dwj(j)
+        # deltas for output layer
+        for i in range(len(output_layer)):
+            # for each neuron in the output layer we get it's delta
+            o_delta =  output_layer[i].compute_back_prop_delta(output[i])
+            np.append(prev_deltas, o_delta)
+          
+        self._update_DELTAS_matrix(prev_deltas, -1, output_layer)
 
         #deltas for hidden layers
         iterator = enumerate(rev_hidden_layers)
+        # we skip the output layer 
         next(iterator)
+        # for each hidden layer
         for layer_index, layer in iterator:
+            # to keep the deltas in this iteration
+            current_deltas = np.array([])
+            # for each neuron in the hidden layer
             for neuron_index in range(len(layer)):
+                # for each neuron in the previous layer (remember the model here is reversed so output layer comes before hidden)
                 for prev_neuron in rev_hidden_layers[layer_index-1]:
+                    # we get the weight between our current neuron (neuron index)
+                    # and the neuron in the previous layer
                     weights.append(prev_neuron.weights[neuron_index])
 
-                prev_deltas[neuron_index] = neuron.compute_back_prop_delta(prev_deltas, weights)
-
-            for i in range(len(prev_deltas)):
-                for j in range(np.size(self.deltas[-layer_index], 0)): #check dimensions
-                    self.deltas[-layer_index][i][j] += prev_deltas[i]*rev_hidden_layers[layer_index][i].dnet_dwj(j)
-
+                # get the delta from the hidden neuron
+                h_delta = neuron.compute_back_prop_delta(prev_deltas, weights)
+                np.append(current_deltas, h_delta)
+            
+            self._update_DELTAS_matrix(current_deltas, -layer_index, layer)
+            
+            # in the next iteration we will use the deltas of this iteration
+            prev_deltas = current_deltas
+            
 
