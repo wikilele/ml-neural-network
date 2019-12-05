@@ -14,3 +14,6 @@ def output_layer(units,**kwargs):
 
 def build():
     return mb.build()
+
+def weights_service(ws):
+    return mb.weights_service(ws)

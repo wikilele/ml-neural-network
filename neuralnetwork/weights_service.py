@@ -7,13 +7,13 @@ class WeightsService:
         self.upper_bound = upper_bound
     
     def get_bias(self):
-        return self.get_random_value()
+        return self._get_random_value()
     
     def get_weights(self,weights_number):
         weights = []
         for i in range(weights_number):
-            weights.append(self.get_random_value())
+            weights.append(self._get_random_value())
         return weights
 
-    def get_random_value(self):
+    def _get_random_value(self):
         return random.uniform(self.lower_bound, self.upper_bound)
