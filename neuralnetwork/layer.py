@@ -7,10 +7,8 @@ class InputLayer:
             self.neurons.append(InputNeuron())
     
     def feed_forward(self,input):
-        output = []
-        for neuron in self.neurons:
-            output.append(neuron.compute_output(input))
-        return output
+        
+        return input
 
 class Layer(InputLayer):
 
@@ -20,6 +18,12 @@ class Layer(InputLayer):
         for i in range(neurons_number):
             self.neurons.append(Neuron(weights_service.get_bias(), weights_service.get_weights(weights_number), activation_function))
 
+    def feed_forward(self,input):
+        output = []
+        
+        for neuron in self.neurons:
+            output.append(neuron.compute_output(input))
+        return output
 
 class OutputLayer(Layer):
 

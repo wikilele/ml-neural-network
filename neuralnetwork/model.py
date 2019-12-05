@@ -20,7 +20,7 @@ class Model():
     
     def feed_forward(self, input):
         temp_input = input
-        for layer in model:
+        for layer in self.model:
             temp_input = layer.feed_forward(temp_input)
         
         return temp_input

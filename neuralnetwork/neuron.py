@@ -11,13 +11,14 @@ class Neuron(InputNeuron):
     def __init__(self, bias, weights, activation_function):
         self.bias = bias
         self.weights =  weights
+        
         self.activation_function = activation_function
         self.output = None
     
     def compute_output(self, input):
-        return self.activation_function.compute_output(net_input(input))
+        return self.activation_function.compute_output(self.net_input(input))
     
-    def net_input(inputs):
+    def net_input(self,inputs):
         weighted_sum = 0
         for i in range(len(inputs)):
             weighted_sum += self.weights[i]*inputs[i]
