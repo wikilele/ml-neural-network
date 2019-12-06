@@ -2,7 +2,9 @@ import numpy as np
 
 class BackPropService:
 
-    def __init__(self, model):
+    def __init__(self, model,momentum_alpha, use_nesterov):
+        self.momentum_alpha = momentum_alpha
+        self.use_nesterov = use_nesterov
         # this matrix stores the DELTAS used to update the weights
         # do not confuse DELTA with delta
         # DELTA are defined as delta * input from previous node
@@ -10,11 +12,29 @@ class BackPropService:
         self.DELTAS = []
         prev_len = len(model[0].neurons)
         for layer in model[1:]:
-            self.DELTAS.append(np.zeros( (len(layer.neurons), prev_len) ))
+            # prev_len + 1 beacuse we consider also the bias
+            self.DELTAS.append(np.zeros( (len(layer.neurons), prev_len + 1) ))
             prev_len = len(layer.neurons)
+        
+        if not use_nesterov:
+            # the DELTAS OLD matrix will be used for standard momentum
+            self.DELTAS_OLD = self.DELTAS.copy()
+        
+    def update_weights(self, model, learning_rate):
+        
+        for layer_index, layer in enumerate(model[1:]):
+            for neuron_index, neuron in enumerate(layer.neurons):
+                for w_index, w in enumerate(neuron.weights):
+                    w += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] # regularization
 
-    def update_weights(self, model):
-        pass
+                    if not self.use_nesterov:
+                        # updating with standard momentum
+                        w += self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
+                    
+                    w += regularization
+        
+        if not self.use_nesterov:
+            self.DELTAS_OLD = self.DELTAS.copy()
     
     def _update_DELTAS_matrix(self,deltas,layer_index, layer):
         # for each computed delta (one delta per neuron)
@@ -73,4 +93,13 @@ class BackPropService:
             # in the next iteration we will use the deltas of this iteration
             prev_deltas = current_deltas
             
+    def batch_starting(self):   
+        if self.use_nesterov:
+            for layer_index, layer in enumerate(model[1:]):
+            for neuron_index, neuron in enumerate(layer.neurons):
+                for w_index, w in enumerate(neuron.weights):
+                    w += self.momentum_alpha * self.DELTAS[layer_index][neuron_index][w_index]
 
+    def batch_ending(self):
+        for matrix in self.DELTAS:
+            matrix.fill(0)

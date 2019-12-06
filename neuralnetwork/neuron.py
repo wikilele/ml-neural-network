@@ -9,15 +9,15 @@ class InputNeuron:
 class Neuron(InputNeuron):
 
     def __init__(self, bias, weights, activation_function):
-        self.bias = bias
-        self.weights =  weights
+        # self.bias = bias
+        self.weights =  [bias] + weights 
         
         self.activation_function = activation_function
         self.inputs = None
         self.output = None
     
     def compute_output(self, input):
-        self.inputs = input
+        self.inputs = [1] + input
         self.output = self.activation_function.compute_output(self.net_input(input))
         return self.output
     
@@ -25,7 +25,7 @@ class Neuron(InputNeuron):
         weighted_sum = 0
         for i in range(len(inputs)):
             weighted_sum += self.weights[i]*inputs[i]
-        return weighted_sum + self.bias
+        return weighted_sum
 
     def dE_dout(self,target_output):
         ''' derivative of error w.r.t. output. The constant 2 is simplified with 1/2 (see notes and self.mean_square_error) '''
@@ -37,7 +37,7 @@ class Neuron(InputNeuron):
 
     def dnet_dwj(self,j):
         ''' just input at position j'''
-        return self.inputs[j]
+        return self.inputs[j] 
     
     def compute_back_prop_delta(self, prev_deltas, weights):
         sum = 0
