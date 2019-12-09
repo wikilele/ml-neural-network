@@ -66,7 +66,7 @@ class OutputNeuron(Neuron):
         pass
 
     def mean_square_error(self, target):
-        return 0.5*self.error_delta^2
+        return 0.5*self.error_delta(target)^2
 
     def root_mean_square_error(self, target):
         return math.root(self.mean_square_error(self, target))

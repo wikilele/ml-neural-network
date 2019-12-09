@@ -9,11 +9,14 @@ class Model():
         self.learning_rate0 = 0.7
         self.learning_rate_tau = self.learning_rate0/100
         self.tau = 200
+        self.outputs = []
+        f = open("test.txt", "w+")              #choose filename
         
 
-    def fit(self,data_iterator,epochs):
+    def fit(self, training_set, dim_batch ,epochs, metrics=['mse']):
         for e in range(epochs):
-            for batch in data_iterator: 
+            self.outputs = []
+            for batch in training_set.batch(dim_batch): 
                 
                 self.backprop_service.batch_starting()
                 
@@ -26,12 +29,21 @@ class Model():
                 
                 self.backprop_service.batch_ending()
             
-            # compute metrics
-
-    def infer(self,newdata):
-        pass
+            for pattern in training_set.batch(1):
+                self.outputs.append(self.feed_forward(pattern))
+            
+            for metric in metrics:
+                if(metric == 'mse'):
+                    csv_row += (str(metrics.mean_square_error(self.outputs, training_set[:,2)) + ','
+                elif(metric == 'mee'):
+                    csv_row += str(metrics.mean_euclidian_error(self.outputs, training_set[:,2])) + ','
+                elif(metric == 'rmse'):
+                    csv_row += str(metrics.root_mean_square_error(self.outputs, training_set[:,2])) + ','
+                
+            f.write(csv_row[:-1] +'\n' )
 
     def evaluate(self,data_iterator):
+        #Compute accuracy, precision and recall
         pass
     
     def feed_forward(self, input):
