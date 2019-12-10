@@ -1,5 +1,5 @@
 import random
-
+import numpy as np
 class Dataset():
 
     def __init__(self, datapath):
@@ -13,7 +13,7 @@ class Dataset():
 
     def size(self):
         # returns the size of the data
-        return len(self.data_set)
+        return np.size(self.data_set, 0)
 
     def batch(self,batch_size):
         # returns a generator
@@ -51,7 +51,8 @@ class MonkDataset(Dataset):
                 inputs = list(map(int,words_list[1 : 7]))
                 inputs = self.__encode_1ofk(inputs)
                 dataset.append((id,inputs, [output_class]))
-        return dataset
+
+        return np.array(dataset)
     
     
     def __encode_1ofk(self,inputs):
@@ -64,4 +65,6 @@ class MonkDataset(Dataset):
                 else:
                     encoded_inputs.append(0)
         return encoded_inputs
+    
+
 
