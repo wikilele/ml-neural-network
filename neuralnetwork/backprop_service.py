@@ -31,7 +31,7 @@ class BackPropService:
                         # updating with standard momentum
                         w += self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
                     
-                    w += regularization
+                    # w += regularization
         
         if not self.use_nesterov:
             self.DELTAS_OLD = self.DELTAS.copy()
@@ -96,9 +96,9 @@ class BackPropService:
     def batch_starting(self):   
         if self.use_nesterov:
             for layer_index, layer in enumerate(model[1:]):
-            for neuron_index, neuron in enumerate(layer.neurons):
-                for w_index, w in enumerate(neuron.weights):
-                    w += self.momentum_alpha * self.DELTAS[layer_index][neuron_index][w_index]
+                for neuron_index, neuron in enumerate(layer.neurons):
+                    for w_index, w in enumerate(neuron.weights):
+                        w += self.momentum_alpha * self.DELTAS[layer_index][neuron_index][w_index]
 
     def batch_ending(self):
         for matrix in self.DELTAS:

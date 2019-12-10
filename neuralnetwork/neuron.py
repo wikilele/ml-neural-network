@@ -18,7 +18,7 @@ class Neuron(InputNeuron):
     
     def compute_output(self, input):
         self.inputs = [1] + input
-        self.output = self.activation_function.compute_output(self.net_input(input))
+        self.output = self.activation_function.compute_output(self.net_input(self.inputs))
         return self.output
     
     def net_input(self,inputs):

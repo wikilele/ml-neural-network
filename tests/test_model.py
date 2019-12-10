@@ -12,7 +12,7 @@ class MockWeightsService:
         return [w for w in range(1,weights_number+1)]
 
 
-class BackPropService(unittest.TestCase):
+class TestModel(unittest.TestCase):
     def setUp(self):
         self.ms = ModelBuilder()
     
