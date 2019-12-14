@@ -17,3 +17,6 @@ def build():
 
 def weights_service(ws):
     return mb.weights_service(ws)
+
+def learning_rate( lr, tau_decay):
+    return mb.learning_rate( lr, tau_decay)

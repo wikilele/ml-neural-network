@@ -1,43 +1,43 @@
 class Metrics:
-    accuracy = None
-    precision = None
-    recall = None
+    def __init__(self):
+        self.acc = 0
+        self.prec = 0
+        self.rec = 0
 
-    mse = None
-    mee = None
-    rmse = None
+        self.mse = []
+        self.mee =  []
+        self.rmse = []
 
-
-    @classmethod
     def accuracy(self, output, target_output):
         correct_outputs = 0
-        for i in range(output):
+        for i in range(len(output)):
             if (output[i] == target_output[i]):
                 correct_outputs += 1
-        
-        return correct_outputs/len(output)
+        self.acc = correct_outputs/len(output) * 100
+        return self.acc
 
-    @classmethod
     def precision(self,output, target_output):
         pass
     
-    @classmethod
     def recall(self, output, target_output):
         pass
     
-    @classmethod
     def mean_square_error(self, output, target_output):
-        pass
+        mse = 0
+        temp = 0
+        for i in range(len(output)):
+            for j in range(len(output[i])):
+                temp += (target_output[i][j] - output[i][j]) **2
+
+        self.mse.append(temp/len(output))
+        return self.mse[-1]
     
-    @classmethod
     def mean_euclidian_error(self, output, target_output):
         pass
     
-    @classmethod
     def root_mean_square_error(self, output, target_output):
         pass
 
-    @classmethod
     def save(self, file_path):
         header = "mean_square_error"
         return

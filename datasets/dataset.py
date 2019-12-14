@@ -3,12 +3,12 @@ import numpy as np
 class Dataset():
 
     def __init__(self, datapath):
-        print("loading the dataset ...")
+        print("loading the dataset " + datapath + "...")
         self.data_set = self._load(datapath) 
 
     def shuffle(self):
         # random shuffle of the data
-        random.shuffle(self.data_set)
+        np.random.shuffle(self.data_set)
         return self
 
     def size(self):

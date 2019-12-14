@@ -1,5 +1,6 @@
 __pycache__
 monks-1.train
+monks-1.test
 ML-CUP19-TR.csv
 .pytest_cache
 test.txt

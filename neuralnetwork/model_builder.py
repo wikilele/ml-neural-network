@@ -59,7 +59,9 @@ class ModelBuilder():
     def learning_rate(self, lr, tau_decay):
         self.learning_r = lr
         self.tau_decay = tau_decay
+        return self
     
     def momentum(self, alpha, use_nesterov):
         self.momentum_alpha = alpha
         self.use_nesterov = use_nesterov
+        return self
