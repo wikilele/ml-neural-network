@@ -46,4 +46,48 @@ class TestBackPropService(unittest.TestCase):
         m.feed_forward([42])
         bs.compute_deltas(m.model,[45])
 
-        assert bs.DELTAS[0][0][1] == - (45 - 42) * 42
+        assert bs.DELTAS[0][0][1] == (45 - 42) * 42
+    
+    def test_two_layers(self):
+        self.ms.weights_service(MockWeightsService())
+        self.ms.input_layer(2)
+        self.ms.hidden_layer(2, activation="linear")
+        self.ms.output_layer(1, activation="linear")
+        m = self.ms.build()
+        bs = BackPropService(m.model,0,False)
+
+        output = m.feed_forward([1,2])
+        assert output[0] == 15
+
+        bs.compute_deltas(m.model,[16])
+
+        assert bs.DELTAS[0][0][1] == (16 - 15) * 1 * 1
+        assert bs.DELTAS[0][0][2] == (16 - 15) * 1 * 2
+        assert bs.DELTAS[0][1][1] == (16 - 15) * 2 * 1
+        assert bs.DELTAS[0][1][2] == (16 - 15) * 2 * 2
+
+        assert bs.DELTAS[1][0][1] == (16 - 15) * 1 * 5
+        assert bs.DELTAS[1][0][1] == (16 - 15) * 1 * 5
+    
+    def est_three_layers(self):
+        self.ms.weights_service(MockWeightsService())
+        self.ms.input_layer(3)
+        self.ms.hidden_layer(3, activation="linear")
+        self.ms.hidden_layer(2, activation="linear")
+        self.ms.output_layer(1, activation="linear")
+        m = self.ms.build()
+        bs = BackPropService(m.model,0,False)
+
+        output = m.feed_forward([1,2])
+        assert output[0] == 15
+
+        bs.compute_deltas(m.model,[16])
+
+        assert bs.DELTAS[0][0][1] == - (16 - 15) * 1 * 1
+        assert bs.DELTAS[0][0][2] == - (16 - 15) * 1 * 2
+        assert bs.DELTAS[0][1][1] == - (16 - 15) * 2 * 1
+        assert bs.DELTAS[0][1][2] == - (16 - 15) * 2 * 2
+
+        assert bs.DELTAS[1][0][1] == - (16 - 15) * 1 * 5
+        assert bs.DELTAS[1][0][1] == - (16 - 15) * 1 * 5
+

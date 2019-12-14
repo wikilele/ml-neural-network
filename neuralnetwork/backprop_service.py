@@ -41,8 +41,8 @@ class BackPropService:
         for i in range(len(deltas)):
             # for each weight j of the neuron i. 
             for j in range(np.size(self.DELTAS[layer_index], 1)):
-                # update the DELTA of weight j from neuron i of layer     
-                self.DELTAS[-1][i][j] += deltas[i] * layer.neurons[i].dnet_dwj(j)
+                # update the DELTA of weight j from neuron i of layer    
+                self.DELTAS[layer_index][i][j] += deltas[i] * layer.neurons[i].dnet_dwj(j)
 
     def compute_deltas(self, model, target_output):
         '''
@@ -56,9 +56,8 @@ class BackPropService:
         output_layer = model[-1]
         # this variable keep the model reverted so that we can iterate on that for the backprop
         # the output layer is considered, the input layer is removed cause it's not needed
-        rev_hidden_layers = reversed(model[1:])
-        weights = []
-
+        rev_hidden_layers = [l for l in reversed(model[1:])]
+        
         # deltas for output layer
         for i in range(len(output_layer.neurons)):
             # for each neuron in the output layer we get it's delta
@@ -67,7 +66,7 @@ class BackPropService:
             
         
         self._update_DELTAS_matrix(prev_deltas, -1, output_layer)
-
+        
         #deltas for hidden layers
         iterator = enumerate(rev_hidden_layers)
         # we skip the output layer 
@@ -78,18 +77,20 @@ class BackPropService:
             current_deltas = np.array([])
             # for each neuron in the hidden layer
             for neuron_index in range(len(layer.neurons)):
+                # the weights between neuron_index and the neuron in the previous layer (conisdering reversed model)
+                weights = []
                 # for each neuron in the previous layer (remember the model here is reversed so output layer comes before hidden)
-                for prev_neuron in rev_hidden_layers[layer_index-1].neurons:
+                for prev_neuron in rev_hidden_layers[layer_index - 1].neurons:
                     # we get the weight between our current neuron (neuron index)
                     # and the neuron in the previous layer
-                    weights.append(prev_neuron.weights[neuron_index])
+                    weights.append(prev_neuron.weights[neuron_index + 1]) # +1 cause at position 0 there is the bias
 
                 # get the delta from the hidden neuron
-                h_delta = neuron.compute_back_prop_delta(prev_deltas, weights)
+                h_delta = layer.neurons[neuron_index].compute_back_prop_delta(prev_deltas, weights)
                 current_deltas = np.append(current_deltas, h_delta)
             
-            self._update_DELTAS_matrix(current_deltas, -layer_index, layer)
-            
+            # layer_index - 1 cause if I'm at pos 1 in reve_hidden_layers, I'm refering to the hidden layer 0 in the model without input layer
+            self._update_DELTAS_matrix(current_deltas, layer_index - 1, layer)
             # in the next iteration we will use the deltas of this iteration
             prev_deltas = current_deltas
             

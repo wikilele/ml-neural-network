@@ -29,7 +29,7 @@ class Neuron(InputNeuron):
 
     def dE_dout(self,target_output):
         ''' derivative of error w.r.t. output. The constant 2 is simplified with 1/2 (see notes and self.mean_square_error) '''
-        return - (target_output- self.output)
+        return (target_output- self.output) #TODO check the slides, probably the -1 is not required
 
     def dout_dnet(self):
         ''' first derivative of the activation function '''

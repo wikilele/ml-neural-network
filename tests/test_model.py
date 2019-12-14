@@ -25,4 +25,3 @@ class TestModel(unittest.TestCase):
         output = model.feed_forward([42])
 
         assert output[0] == 49
-        
