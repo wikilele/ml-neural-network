@@ -6,9 +6,15 @@ from .activation_function import get_activation_function
 class ModelBuilder():
 
     def __init__(self):
-        # init weight service with default parameters
-        self.ws = WeightsService(-0.7,0.7) 
         self.model = []
+        # init hyperparams with default value
+        self.ws = WeightsService(-0.7,0.7)
+        self.learning_r = 0.7
+        self.tau_decay = 200 # value for learning rate decay 
+        self.momentum_alpha = 0 # no momentum
+        self.use_nesterov = False
+
+        
 
 
     def input_layer(self,units):
@@ -40,11 +46,20 @@ class ModelBuilder():
         return self
     
     def build(self):
-        return Model(self.model)
+        return Model(self.model, self.learning_r, self.tau_decay, self.momentum_alpha, self.use_nesterov)
   
     def reset(self):
         self.model = []
     
     def weights_service(self,ws):
+        #TODO discuss if really needed or just an overkill
         self.ws = ws
         return self
+    
+    def learning_rate(self, lr, tau_decay):
+        self.learning_r = lr
+        self.tau_decay = tau_decay
+    
+    def momentum(self, alpha, use_nesterov):
+        self.momentum_alpha = alpha
+        self.use_nesterov = use_nesterov

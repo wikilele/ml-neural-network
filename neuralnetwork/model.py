@@ -1,17 +1,15 @@
 from .backprop_service import BackPropService
+from .metrics import Metrics as metrics
 
 class Model():
 
-    def __init__(self, model, use_nesterov=False):
+    def __init__(self, model, learning_rate, tau_decay , momentum_alpha, use_nesterov):
         self.model = model
-        self.momentum_alpha = 0
-        self.backprop_service = BackPropService(model,self.momentum_alpha, use_nesterov)
-        #TODO pass this to init
-        self.learning_rate0 = 0.7
+        self.learning_rate0 = learning_rate
         self.learning_rate_tau = self.learning_rate0/100
-        self.tau = 200
+        self.tau = tau_decay
         self.outputs = []
-        f = open("test.txt", "w+")              #choose filename
+        self.backprop_service = BackPropService(model, momentum_alpha, use_nesterov)
         
 
     def fit(self, training_set, dim_batch ,epochs, metrics=['mse']):
@@ -35,13 +33,13 @@ class Model():
             
             for metric in metrics:
                 if metric == 'mse':
-                    csv_row += str(metrics.mean_square_error(self.outputs, training_set[:,2])) + ','
+                    mse = metrics.mean_square_error(self.outputs, training_set[:,2])
                 elif metric == 'mee':
-                    csv_row += str(metrics.mean_euclidian_error(self.outputs, training_set[:,2])) + ','
+                    mee = metrics.mean_euclidian_error(self.outputs, training_set[:,2])
                 elif metric == 'rmse':
-                    csv_row += str(metrics.root_mean_square_error(self.outputs, training_set[:,2])) + ','
+                    rmse = metrics.root_mean_square_error(self.outputs, training_set[:,2])
                 
-            f.write(csv_row[:-1] +'\n' )
+            metrics.save("./metrics.csv")
 
     def evaluate(self,data_iterator):
         #Compute accuracy, precision and recall
