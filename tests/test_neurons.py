@@ -11,4 +11,4 @@ class TestNeurons(unittest.TestCase):
         on = OutputNeuron(0,[1],af)
         on.compute_output([42])
 
-        assert on.compute_back_prop_delta(45) == -3
+        assert on.compute_back_prop_delta(45) == 3
