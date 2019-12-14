@@ -26,12 +26,23 @@ class BackPropService:
             for neuron_index, neuron in enumerate(layer.neurons):
                 for w_index, w in enumerate(neuron.weights):
                     w += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] # regularization
-
+                    # the gradien probably should be diveded by themini batch size
+                    
                     if not self.use_nesterov:
                         # updating with standard momentum
                         w += self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
-                    
-                    # w += regularization
+
+                    # slide 54 NN-part2
+                    # probably it should be
+                    # if not nesterov:
+                    #   self.DELTAS[layer_index][neuron_index][w_index] = learning_rate * self.DELTAS[layer_index][neuron_index][w_index] + self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
+                    #   w += self.DELTAS[layer_index][neuron_index][w_index]
+                    # else:
+                    #   w += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] 
+
+                    # w_old = w
+                    # do the stuff above
+                    # w -= lambda * w_old
         
         if not self.use_nesterov:
             self.DELTAS_OLD = self.DELTAS.copy()
@@ -89,7 +100,7 @@ class BackPropService:
                 h_delta = layer.neurons[neuron_index].compute_back_prop_delta(prev_deltas, weights)
                 current_deltas = np.append(current_deltas, h_delta)
             
-            # layer_index - 1 cause if I'm at pos 1 in reve_hidden_layers, I'm refering to the hidden layer 0 in the model without input layer
+            # layer_index - 1 cause if I'm at pos 1 in rev_hidden_layers, I'm refering to the hidden layer 0 in the model without input layer
             self._update_DELTAS_matrix(current_deltas, layer_index - 1, layer)
             # in the next iteration we will use the deltas of this iteration
             prev_deltas = current_deltas
