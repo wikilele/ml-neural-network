@@ -21,10 +21,10 @@ def main():
     ws = WeightsService(-0.00009, 0.00009)
 
     nn.input_layer(17)
-    nn.hidden_layer(3)
-    nn.output_layer(1)
+    nn.hidden_layer(3, activation='sigmoid')
+    nn.output_layer(1, activation='sigmoid')
     nn.weights_service(ws)
-    nn.learning_rate(0.3,320)
+    nn.learning_rate(0.7,320)
     model = nn.build()
 
     epochs = 320
