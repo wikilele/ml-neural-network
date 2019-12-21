@@ -2,9 +2,8 @@ import random
 import numpy as np
 class Dataset():
 
-    def __init__(self, datapath):
-        print("loading the dataset " + datapath + "...")
-        self.data_set = self._load(datapath) 
+    def __init__(self, numpy_dataset):
+        self.data_set = numpy_dataset
 
     def shuffle(self):
         # random shuffle of the data
@@ -27,21 +26,21 @@ class Dataset():
         
         
         yield self.data_set[left_index:self.size()]
-        
-               
-
-    def _load(self,datapath):
-        # this method must be implemented in the sublcasses
-        # it must return something like: [(id , [input1, input2, ...] , [ouput1,output2, ...])]
-        return []
-        
-
-class MonkDataset(Dataset):
-
-    def __init__(self,datapath):
-        Dataset.__init__(self,datapath)
     
-    def _load(self,datapath):
+    def split(self):
+        ''' returns the training set and the validation set'''
+        size = self.size()
+        splitting_index = int(size * (2 / 3))
+        training = Dataset(self.data_set[0:splitting_index])
+        validation = Dataset(self.data_set[splitting_index:size])
+        return training, validation
+               
+        
+
+class MonkDataset:
+    
+    @staticmethod
+    def load(datapath):
         dataset = []
         with open(datapath, 'r') as fp:
             for line in fp:
@@ -49,13 +48,13 @@ class MonkDataset(Dataset):
                 id = words_list[7]
                 output_class = int(words_list[0])
                 inputs = list(map(int,words_list[1 : 7]))
-                inputs = self.__encode_1ofk(inputs)
+                inputs = MonkDataset.__encode_1ofk(inputs)
                 dataset.append((id,inputs, [output_class]))
 
-        return np.array(dataset)
+        return Dataset(np.array(dataset))
     
-    
-    def __encode_1ofk(self,inputs):
+    @staticmethod
+    def __encode_1ofk(inputs):
         max_values = [3,3,2,3,4,2]
         encoded_inputs = []
         for i in range(len(inputs)):
