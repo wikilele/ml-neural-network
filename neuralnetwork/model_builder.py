@@ -10,7 +10,7 @@ class ModelBuilder():
         # init hyperparams with default value
         self.ws = WeightsService(-0.7,0.7)
         self.learning_r = 0.7
-        self.tau_decay = 200 # value for learning rate decay 
+        self.tau_decay = 0 # value for learning rate decay 
         self.momentum_alpha = 0 # no momentum
         self.use_nesterov = False
 

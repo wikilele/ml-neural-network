@@ -59,7 +59,10 @@ class Model():
         return temp_input
     
     def _update_learning_rate(self, epoch):
-        if epoch >= self.tau:
+        if self.tau == 0:
+            # no learning rate decay
+            return self.learning_rate0
+        elif epoch >= self.tau:
             return self.learning_rate_tau
         else:
             return (1 - epoch/self.tau)*self.learning_rate0 + (epoch/self.tau) * self.learning_rate_tau
