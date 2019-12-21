@@ -14,23 +14,20 @@ def plot_error(epochs, error):
 def main():
 
     dataset = ds.load('monks-1.train')
-    dataset.shuffle() # shuffles the dataset
-    # dataset.size()
-    # dataset.batch(dataset.size()) # returning an iterator which produced batches of  size 2
-
+    # training_set, validation_set = dataset.split()
     ws = WeightsService(-0.00009, 0.00009)
 
     nn.input_layer(17)
     nn.hidden_layer(3, activation='sigmoid')
     nn.output_layer(1, activation='sigmoid')
     nn.weights_service(ws)
-    nn.learning_rate(0.7,320)
+    nn.learning_rate(0.09,0)
     model = nn.build()
 
     epochs = 320
 
-    #metrics = model.fit(dataset,1,epochs)
-    metrics = model.fit(dataset,dataset.size(),epochs)
+    metrics = model.fit(dataset,1,epochs)
+    #metrics = model.fit(dataset, dataset.size(),epochs)
     
     testset = ds.load('monks-1.test')
     classification_outputs = []
