@@ -1,53 +1,61 @@
 import neuralnetwork as nn
+from neuralnetwork.metrics import Metrics
 import datasets as ds
-import matplotlib.pyplot as plt 
-from neuralnetwork.weights_service import WeightsService
-
-def plot_error(epochs, error):
-        plt.plot(epochs,error)
-
-        plt.xlabel('epochs') 
-        plt.ylabel('error') 
-        plt.title('Mean Square Error graph') 
-        plt.show() 
+from utils import *
+import os
+import json
 
 def main():
+    if not os.path.isdir('./plots'):
+        os.mkdir('./plots')
 
-    dataset = ds.load('monks-1.train')
-    # training_set, validation_set = dataset.split()
-    ws = WeightsService(-0.00009, 0.00009)
-
-    nn.input_layer(17)
-    nn.hidden_layer(3, activation='sigmoid')
-    nn.output_layer(1, activation='sigmoid')
-    nn.weights_service(ws)
-    nn.learning_rate(0.09,0)
-    model = nn.build()
-
-    epochs = 320
-
-    metrics = model.fit(dataset,1,epochs)
-    #metrics = model.fit(dataset, dataset.size(),epochs)
+    trainset = ds.load('monks-1.train')
+    validationset = ds.load('monks-1.test')
     
-    testset = ds.load('monks-1.test')
-    classification_outputs = []
-    for batch in testset.batch(1):
-        for patter in batch:
-            out = model.feed_forward(patter[1])
-            if out[0] >= 0.5:
-                classification_outputs.append(1)
-            else:
-                classification_outputs.append(0)
+    param_grid = {
+        'epochs' : [390],
+        'weights_bound' : [0.00009],
+        'learning_rate' : [0.09,0.2],
+        'batch_size' : [trainset.size()]
+    }
+    
+    grid_search_resutls = {}
+    result_index = 0
+    for params in grid_search(param_grid):
+        print(params)
+        epochs = params['epochs']
+        batch_size = params['batch_size']
+        weights_bound = params['weights_bound']
+        learning_rate = params['learning_rate']
+               
 
-    target = [ x[0] for x in testset.data_set[:,2]]
-    metrics.accuracy(classification_outputs, target)     
+        nn.input_layer(17)
+        nn.hidden_layer(3, activation='sigmoid')
+        nn.output_layer(1, activation='sigmoid')
+        nn.init_weights_random(weights_bound)
+        nn.learning_rate(learning_rate,0)
+        model = nn.build()
 
-    print("ACCURACY: " + str(metrics.acc) + " %")
-    print("MSE: " + str(metrics.mse[-1]))    
+        train_metrics = Metrics()
+        val_metrics = Metrics()
+        for m in model.fit(trainset,batch_size,epochs):
+            train_metrics.compute_error(m,trainset)
+            val_metrics.compute_error(m,validationset)
 
-    plot_error(range(epochs), metrics.mse)
+        val_metrics.compute_other(model,validationset,threshold=0.5)  
 
+        print("ACCURACY: " + str(val_metrics.acc) + " %")
+        print("MSE: " + str(val_metrics.mse[-1]))    
 
+        plt = plot_error(range(epochs),train_metrics.mse, val_metrics.mse)
+        path = './plots/result' + str(result_index) + '.png'
+        result_index +=1
+        plt.savefig(path)
+        plt.clf()
+        grid_search_resutls[val_metrics.mse[-1]] = { 'params' : params, 'plotpath' : path}
+
+    with open('grid_results.json','w+') as f:
+        f.write(json.dumps(grid_search_resutls,indent=4, sort_keys=True))
 
 if __name__ == '__main__':
     main()

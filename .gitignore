@@ -4,3 +4,5 @@ monks-1.test
 ML-CUP19-TR.csv
 .pytest_cache
 test.txt
+plots
+grid_results.json
