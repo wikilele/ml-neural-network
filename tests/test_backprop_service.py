@@ -37,7 +37,7 @@ class TestBackPropService(unittest.TestCase):
 
 
     def test_one_layer(self):
-        self.ms.weights_service(MockWeightsService())
+        self.ms.ws = MockWeightsService()
         self.ms.input_layer(1)
         self.ms.output_layer(1, activation="linear")
         m = self.ms.build()
@@ -49,7 +49,7 @@ class TestBackPropService(unittest.TestCase):
         assert bs.DELTAS[0][0][1] == (45 - 42) * 42
     
     def test_two_layers(self):
-        self.ms.weights_service(MockWeightsService())
+        self.ms.ws = MockWeightsService()
         self.ms.input_layer(2)
         self.ms.hidden_layer(2, activation="linear")
         self.ms.output_layer(1, activation="linear")

@@ -17,7 +17,7 @@ class TestModel(unittest.TestCase):
         self.ms = ModelBuilder()
     
     def test_feed_forward1(self):
-        self.ms.weights_service(MockWeightsService())
+        self.ms.ws = MockWeightsService()
         self.ms.input_layer(1)
         self.ms.output_layer(1, activation="linear")
         model = self.ms.build()
