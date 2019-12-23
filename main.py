@@ -6,8 +6,7 @@ import os
 import json
 
 def main():
-    if not os.path.isdir('./plots'):
-        os.mkdir('./plots')
+    results = Results()
 
     trainset = ds.load('monks-1.train')
     validationset = ds.load('monks-1.test')
@@ -19,8 +18,6 @@ def main():
         'batch_size' : [trainset.size()]
     }
     
-    grid_search_resutls = {}
-    result_index = 0
     for params in grid_search(param_grid):
         print(params)
         epochs = params['epochs']
@@ -45,17 +42,13 @@ def main():
         val_metrics.compute_other(model,validationset,threshold=0.5)  
 
         print("ACCURACY: " + str(val_metrics.acc) + " %")
-        print("MSE: " + str(val_metrics.mse[-1]))    
 
-        plt = plot_error(range(epochs),train_metrics.mse, val_metrics.mse)
-        path = './plots/result' + str(result_index) + '.png'
-        result_index +=1
-        plt.savefig(path)
-        plt.clf()
-        grid_search_resutls[val_metrics.mse[-1]] = { 'params' : params, 'plotpath' : path}
-
-    with open('grid_results.json','w+') as f:
-        f.write(json.dumps(grid_search_resutls,indent=4, sort_keys=True))
+        results.plot_error(range(epochs),train_metrics.mse, val_metrics.mse)
+        dest_path = results.save_plot()
+        results.add_result(val_metrics.mse[-1], params, dest_path)
+          
+    results.save_results()
+    
 
 if __name__ == '__main__':
     main()
