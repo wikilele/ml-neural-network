@@ -38,6 +38,38 @@ class Metrics:
     def root_mean_square_error(self, output, target_output):
         pass
 
-    def save(self, file_path):
-        header = "mean_square_error"
-        return
+    def compute_error(self, model, dataset, metrics=['mse']):
+        outputs = []
+        for batch in dataset.batch(1):
+            for pattern in batch:
+                outputs.append(model.feed_forward(pattern[1]))
+            
+        target_outputs = dataset.data_set[:,2]
+        for metric in metrics:
+            if metric == 'mse':
+                self.mean_square_error(outputs, target_outputs)
+            elif metric == 'mee':
+                self.mean_euclidian_error(outputs, target_outputs)
+            elif metric == 'rmse':
+                self.root_mean_square_error(outputs, target_outputs)
+        
+        return self
+
+    #TODO this function name is orrible, I know it, need to find a better name to refer to acc, prec, rec
+    def compute_other(self, model, dataset, metrics=['acc'], threshold=0):
+        classification_outputs = []
+        for batch in dataset.batch(1):
+            for patter in batch:
+                out = model.feed_forward(patter[1])
+                if out[0] >= threshold:
+                    classification_outputs.append(1)
+                else:
+                    classification_outputs.append(0)
+
+        target = [ x[0] for x in dataset.data_set[:,2]]
+        for metric in metrics:
+            if metric == 'acc':
+                self.accuracy(classification_outputs, target)
+         
+        
+        return self
