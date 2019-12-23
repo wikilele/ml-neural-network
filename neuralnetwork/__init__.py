@@ -13,10 +13,13 @@ def output_layer(units,**kwargs):
     return mb.output_layer(units,**kwargs)
 
 def build():
-    return mb.build()
+    global mb
+    model = mb.build()
+    mb = ModelBuilder()
+    return model
 
-def weights_service(ws):
-    return mb.weights_service(ws)
+def init_weights_random(bound):
+    return mb.init_weights_random(bound)
 
 def learning_rate( lr, tau_decay):
     return mb.learning_rate( lr, tau_decay)

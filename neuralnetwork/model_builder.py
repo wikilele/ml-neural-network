@@ -15,8 +15,6 @@ class ModelBuilder():
         self.use_nesterov = False
 
         
-
-
     def input_layer(self,units):
         # print("input layer" + str(units))
         input_layer = InputLayer(units)
@@ -47,13 +45,11 @@ class ModelBuilder():
     
     def build(self):
         return Model(self.model, self.learning_r, self.tau_decay, self.momentum_alpha, self.use_nesterov)
-  
-    def reset(self):
-        self.model = []
+
     
-    def weights_service(self,ws):
-        #TODO discuss if really needed or just an overkill
-        self.ws = ws
+    def init_weights_random(self, bound):
+        #TODO discuss if ws really needed or just an overkill
+        self.ws = WeightsService(-bound, bound)
         return self
     
     def learning_rate(self, lr, tau_decay):
