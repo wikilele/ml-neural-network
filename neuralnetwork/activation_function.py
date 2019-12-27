@@ -18,15 +18,12 @@ class ActivationFunction:
 
 class Sigmoid(ActivationFunction):
     def compute_output(self, input):
-        try:
-            res = 1/(1 + math.exp(-input))
-            return res
-        except OverflowError:
-            print(input)
-            exit()
-    
+        res = 1/(1 + math.exp(-input))
+        return res
+ 
     def first_derivative(self, input):
-        return input * (1 - input)
+        tmp = self.compute_output(input)
+        return tmp * (1 - tmp) 
 
 class Linear(ActivationFunction):
     def compute_output(self, input):
