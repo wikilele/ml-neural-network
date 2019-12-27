@@ -51,7 +51,7 @@ class Results:
 
     def plot_error(self, epochs, train_error, val_error):
         plt.plot(epochs,train_error, '-', label='train', color='black' )
-        plt.plot(epochs,val_error, '- -', label='validation', color='black')
+        plt.plot(epochs,val_error, '--', label='validation', color='black')
 
         plt.xlabel('epochs') 
         plt.legend(loc='upper right') 

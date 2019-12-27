@@ -14,7 +14,7 @@ def main():
     param_grid = {
         'epochs' : [390],
         'weights_bound' : [0.00009],
-        'learning_rate' : [0.09,0.2],
+        'learning_rate' : [0.09,0.2,0.14],
         'batch_size' : [trainset.size()]
     }
     
