@@ -17,10 +17,29 @@ class Metrics:
         return self.acc
 
     def precision(self,output, target_output):
-        pass
+        true_positive = 0
+        false_positive = 0
+        for i in range(len(output)):
+            if(output[i] == 1):
+                if(target_output[i] == 1):
+                    true_positive += 1
+                else:
+                    false_positive += 1
+        
+        self.prec = true_positive/(true_positive+false_positive)
+        return prec
     
     def recall(self, output, target_output):
-        pass
+        true_positive = 0
+        false_negative = 0
+        for i in range(len(output)):
+            if(output[i] == target_output[i] && output[i] == 1):
+                true_positive += 1
+            elif(output[i] != target_output[i] && output[i] == 0):
+                false_negative += 1
+        
+        self.rec = true_positive/(true_positive+false_negative)
+        return rec
     
     def mean_square_error(self, output, target_output):
         mse = 0
@@ -70,6 +89,9 @@ class Metrics:
         for metric in metrics:
             if metric == 'acc':
                 self.accuracy(classification_outputs, target)
-         
+            elif metric == 'prec':
+                self.precision(classification_outputs, target)
+            elif metric == 'rec':
+                self.recall(classification_outputs, target)
         
         return self

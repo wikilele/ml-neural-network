@@ -39,7 +39,7 @@ def main():
             train_metrics.compute_error(m,trainset)
             val_metrics.compute_error(m,validationset)
 
-        val_metrics.compute_other(model,validationset,threshold=0.5)  
+        val_metrics.compute_other(model,validationset,metrics=['acc', 'prec','rec'],threshold=0.5)  
 
         print("ACCURACY: " + str(val_metrics.acc) + " %")
 
