@@ -46,7 +46,7 @@ class Results:
     def __init__(self):
         if not os.path.isdir('./plots'):
             os.mkdir('./plots')
-        self.grid_search_resutls = {}
+        self.grid_search_results = {}
         self.result_index = 0
 
     def plot_error(self, epochs, train_error, val_error):
@@ -67,10 +67,10 @@ class Results:
         plt.clf()
         return path
     
-    def add_result(self,mse, params, path):
-        self.grid_search_resutls[mse] = {'params' : params, 'plotpath': path}
+    def add_result(self,mse, params, metrics_values, path):
+        self.grid_search_results[mse] = {'metrics': metrics_values, 'params' : params, 'plotpath': path}
     
     def save_results(self):
-        with open('grid_results.json','w+') as f:
-            f.write(json.dumps(self.grid_search_resutls,indent=4, sort_keys=True))
+        with open('results/grid_results.json','w+') as f:
+            f.write(json.dumps(self.grid_search_results,indent=4, sort_keys=True))
     

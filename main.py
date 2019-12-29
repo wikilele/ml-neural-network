@@ -12,7 +12,7 @@ def main():
     validationset = ds.load('monks-1.test')
     
     param_grid = {
-        'epochs' : [390],
+        'epochs' : [100],
         'weights_bound' : [0.00009],
         'learning_rate' : [0.09,0.2,0.14],
         'batch_size' : [trainset.size()]
@@ -43,9 +43,15 @@ def main():
 
         print("ACCURACY: " + str(val_metrics.acc) + " %")
 
+        metrics_values =  {
+            'accuracy': val_metrics.acc,
+            'precision': val_metrics.prec,
+            'recall': val_metrics.rec
+        }
+
         results.plot_error(range(epochs),train_metrics.mse, val_metrics.mse)
         dest_path = results.save_plot()
-        results.add_result(val_metrics.mse[-1], params, dest_path)
+        results.add_result(val_metrics.mse[-1], params,metrics_values, dest_path)
           
     results.save_results()
     
