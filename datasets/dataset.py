@@ -27,13 +27,19 @@ class Dataset():
         
         yield self.data_set[left_index:self.size()]
     
-    def split(self):
-        ''' returns the training set and the validation set'''
+    def split(self, percentage):
+        '''
+        it splits the set according to the input parameter.
+        it returns a two Dataset object:
+        set1 is from 0 to size*percentage
+        set2 is the remaining data
+        '''
         size = self.size()
-        splitting_index = int(size * (2 / 3))
-        training = Dataset(self.data_set[0:splitting_index])
-        validation = Dataset(self.data_set[splitting_index:size])
-        return training, validation
+        splitting_index = int(size * percentage)
+        set1 = Dataset(self.data_set[0:splitting_index])
+        set2 = Dataset(self.data_set[splitting_index:size])
+        
+        return set1, set2
                
         
 
