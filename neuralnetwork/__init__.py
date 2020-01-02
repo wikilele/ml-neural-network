@@ -13,10 +13,13 @@ def output_layer(units,**kwargs):
     return mb.output_layer(units,**kwargs)
 
 def build():
-    global mb
     model = mb.build()
-    mb = ModelBuilder()
+    reset()
     return model
+
+def reset():
+    global mb
+    mb = ModelBuilder()
 
 def init_weights_random(bound):
     return mb.init_weights_random(bound)
