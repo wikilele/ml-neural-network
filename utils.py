@@ -1,10 +1,11 @@
 #
 #  just a bunch of functions and classes taken from internet
 #
-from itertools import product
-import matplotlib.pyplot as plt 
+
+#import matplotlib.pyplot as plt 
 import os
 import json
+
 
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     """
@@ -27,21 +28,6 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
     if iteration == total: 
         print()
   
-
-# https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/model_selection/_search.py
-def grid_search(param_grid):
-    
-    # Always sort the keys of a dictionary, for reproducibility
-    items = sorted(param_grid.items())
-    if not items:
-        yield {}
-    else:
-        keys, values = zip(*items)
-        for v in product(*values):
-            params = dict(zip(keys, v))
-            yield params
-
-
 class Results:
     def __init__(self):
         if not os.path.isdir('./plots'):
@@ -49,18 +35,18 @@ class Results:
         self.grid_search_results = {}
         self.result_index = 0
 
-    def plot_error(self, epochs, train_error, val_error):
-        plt.plot(epochs,train_error, '-', label='train', color='black' )
-        plt.plot(epochs,val_error, '--', label='validation', color='black')
+    # def plot_error(self, epochs, train_error, val_error):
+    #     plt.plot(epochs,train_error, '-', label='train', color='black' )
+    #     plt.plot(epochs,val_error, '--', label='validation', color='black')
 
-        plt.xlabel('epochs') 
-        plt.legend(loc='upper right') 
-        plt.title('Mean Square Error graph')     
+    #     plt.xlabel('epochs') 
+    #     plt.legend(loc='upper right') 
+    #     plt.title('Mean Square Error graph')     
     
-    def show_plot(self):
-        plt.show()
+    # def show_plot(self):
+    #     plt.show()
 
-    def save_plot(self):
+    def save_plot(self,plt):
         path = './plots/result' + str(self.result_index) + '.png'
         self.result_index +=1
         plt.savefig(path)
