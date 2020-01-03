@@ -23,6 +23,13 @@ def add_model(model):
 def get_model(model_index):
     return __models[model_index]['model']
 
+def get_models():
+    global __models
+    m = []
+    for v in __models.values():
+        m.append(v['model'])
+    return m
+
 def set_datasets(trainset, valset):
     global training_set
     global validation_set
@@ -66,6 +73,8 @@ def avg_acc():
     
     return arrays_mean(tr_acc), arrays_mean(val_acc)
 
+def get_metrics():
+    return Metrics()
 
 # https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/model_selection/_search.py
 def grid_search(param_grid):

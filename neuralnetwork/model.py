@@ -29,9 +29,12 @@ class Model():
     
 
 
-    def evaluate(self,data_iterator):
-        #Compute accuracy, precision and recall
-        pass
+    def classify(self, input, threshold = 0):
+        out = self.feed_forward(input)
+        if out[0] >= threshold:
+            return 1
+        else:
+            return 0
     
     def feed_forward(self, input):
         temp_input = input

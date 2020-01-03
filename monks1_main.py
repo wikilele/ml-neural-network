@@ -1,16 +1,19 @@
+import sys
+from statistics import mode
+
 import datasets as ds
 import matplotlib.pyplot as plt
 import model_selection as ms
 import neuralnetwork as nn
 import results as res
 from utils import printProgressBar
+import json
 
-
-def monks1():
+def monks1(param_grid, model_assessment=False):
     # this file contains the whole dataset
     # we rely on it instead of using the provided splitting 
     # because in that way we simulate a splitting according to hold-out technique
-    dataset = ds.load('monks-1.test')
+    dataset = ds.load('datasets/monks-1.test', 'monks')
     dataset.shuffle() # bacause data are taken randomly in monks-1.train
     # simple hold-out strategy 
     # ~123 elements for training set as in the original splitting
@@ -18,24 +21,12 @@ def monks1():
     trainvalset, testset = dataset.split(43/100)
     trainset, validationset = trainvalset.split(66.6/100)
     
-    param_grid = [{
-        'weights_bound' : [0.00009, 0.0009],
-        'learning_rate' : [0.14,0.09],
-        'batch_size' : [trainset.size()]
-    },{
-        'weights_bound' : [0.00009, 0.0009],
-        'learning_rate' : [0.14,0.09],
-        'batch_size' : [1]
-    },{
-        'weights_bound' : [0.00009, 0.0009],
-        'learning_rate' : [0.14,0.09],
-        'batch_size' : [64]
-    }]
-    
+
     for params in ms.grid_search(param_grid):
         print(params)
         epochs = 390 # value taken from the monks problem paper
-        batch_size = params['batch_size']
+        # if batch size is -1 means we want the batch equal to the entire training set size
+        batch_size = params['batch_size'] if params['batch_size'] > 0 else trainset.size()
         weights_bound = params['weights_bound']
         learning_rate = params['learning_rate']
 
@@ -112,6 +103,42 @@ def monks1():
     res.add_result_header('mse','batch_s','weights', 'lr', 'acc', 'path')     
     res.save_results()
     
+    if model_assessment:
+        # here we want to use the testset to assess the model performances
+        trainied_models = ms.get_models()
+        voted_outputs = []
+        for batch in testset.batch(1):
+            for pattern in batch:
+                tmp_outputs = []
+                for m in trainied_models:
+                    tmp_outputs.append( m.classify(pattern[1],threshold=0.5) )
+                
+                # we get the most frequent element ( majority vote)
+                voted_outputs.append(mode(tmp_outputs))
+
+        metrics = ms.get_metrics()
+        target_outputs = [ x[0] for x in testset.data_set[:,2]]
+        acc = metrics.accuracy(voted_outputs,target_outputs)
+        recall = metrics.recall(voted_outputs, target_outputs)
+        precision = metrics.precision(voted_outputs, target_outputs)
+        
+        print("ACCURACY " + str(acc))
+        print("PRECISION " + str(precision))
+        print("RECALL " + str(recall))
 
 if __name__ == '__main__':
-    monks1()
+    if len(sys.argv) < 2:
+        print("USAGE AND EXIT")
+        print("python3.6 monks1_main.py [model_selection/paramgrid.json] [-a] ")
+        print()
+        print("-a  should be given if we want model assessment at the end")
+        exit(-1)
+    
+    with open(sys.argv[1],'r') as pgf:
+        param_grid = json.load(pgf)
+    
+    model_assessment = False
+    if len(sys.argv) == 3:
+        model_assessment = True
+        
+    monks1(param_grid, model_assessment=model_assessment)
