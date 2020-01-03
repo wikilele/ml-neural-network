@@ -4,5 +4,8 @@ monks-1.test
 ML-CUP19-TR.csv
 .pytest_cache
 test.txt
-plots
+~results/plots
+~results/__init__.py
+results/plots/*
 grid_results.json
+results/*.json
