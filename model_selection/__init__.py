@@ -56,6 +56,16 @@ def avg_mse():
     
     return arrays_mean(tr_erros), arrays_mean(val_errors)
 
+def avg_acc():
+    global __models
+    tr_acc = []
+    val_acc = []
+    for m_info in __models.values():
+        tr_acc.append(m_info['training_metrics'].acc)
+        val_acc.append(m_info['validation_metrics'].acc)
+    
+    return arrays_mean(tr_acc), arrays_mean(val_acc)
+
 
 # https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/model_selection/_search.py
 def grid_search(param_grid):
