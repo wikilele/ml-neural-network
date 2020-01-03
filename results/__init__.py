@@ -1,10 +1,11 @@
 import os
-import json
 import matplotlib.pyplot as plt 
 
 result_index = 0
-grid_search_results = {}
-TASK = ""
+gridsearch_results_header = ""
+gridsearch_results_body = ""
+TASK = None
+
 
 def set_task(task_name):
     global TASK
@@ -25,9 +26,20 @@ def save_plot(plt, mtype): # type can be mse, acc, mee
     plt.clf()
     return path
 
-def add_result(mse, params, metrics_values, path):
-        grid_search_results[mse] = {'metrics': metrics_values, 'params' : params, 'plotpath': path}
+def add_result_header(*args):
+    global gridsearch_results_header
+    for e in args:
+        gridsearch_results_header += e + ", "
+    gridsearch_results_header += '\n'
+
+def add_result(*args):
+    global gridsearch_results_body
+    for e in args:  
+        gridsearch_results_body += str(e) + ", "
+    gridsearch_results_body += '\n'
+    #grid_search_results[mse] = {'metrics': metrics_values, 'params' : params, 'plotpath': path}
     
 def save_results():
-    with open('results/' + TASK + '/grid_results.json','w+') as f:
-        f.write(json.dumps(grid_search_results,indent=4, sort_keys=True))
+    with open('results/' + TASK + '/grid_results.csv','w+') as f:
+        f.write(gridsearch_results_header)
+        f.write(gridsearch_results_body)

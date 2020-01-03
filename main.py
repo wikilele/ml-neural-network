@@ -18,11 +18,19 @@ def monks1():
     trainvalset, testset = dataset.split(43/100)
     trainset, validationset = trainvalset.split(66.6/100)
     
-    param_grid = {
-        'weights_bound' : [0.00009],
+    param_grid = [{
+        'weights_bound' : [0.00009, 0.0009],
         'learning_rate' : [0.14,0.09],
         'batch_size' : [trainset.size()]
-    }
+    },{
+        'weights_bound' : [0.00009, 0.0009],
+        'learning_rate' : [0.14,0.09],
+        'batch_size' : [1]
+    },{
+        'weights_bound' : [0.00009, 0.0009],
+        'learning_rate' : [0.14,0.09],
+        'batch_size' : [64]
+    }]
     
     for params in ms.grid_search(param_grid):
         print(params)
@@ -98,8 +106,10 @@ def monks1():
         # this will be used in test phase
         }
 
-        res.add_result(avg_tr_error[-1], params,metrics_values, msepath)
-          
+        
+        res.add_result(avg_tr_error[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , metrics_values['accuracy'], msepath)
+
+    res.add_result_header('mse','batch_s','weights', 'lr', 'acc', 'path')     
     res.save_results()
     
 
