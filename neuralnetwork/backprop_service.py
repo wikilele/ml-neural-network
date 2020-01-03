@@ -2,7 +2,7 @@ import numpy as np
 
 class BackPropService:
 
-    def __init__(self, model,momentum_alpha, use_nesterov):
+    def __init__(self, model,momentum_alpha, use_nesterov, regularization_lambda):
         self.momentum_alpha = momentum_alpha
         self.use_nesterov = use_nesterov
         # this matrix stores the DELTAS used to update the weights
@@ -20,12 +20,21 @@ class BackPropService:
             # the DELTAS OLD matrix will be used for standard momentum
             self.DELTAS_OLD = self.DELTAS.copy()
         
+        self.regularization_lambda = regularization_lambda
+        
     def update_weights(self, model, learning_rate, batch_dim):
         for layer_index, layer in enumerate(model[1:]):
             for neuron_index, neuron in enumerate(layer.neurons):
                 for w_index, w in enumerate(neuron.weights):
+                    
+                    w_old = 0
+
+                    # we keep the value of w_old for regularization
+                    if self.regularization_lambda != 0:
+                        w_old = w
+                        
                     #TODO i'm not sure about dividing by batch_dim
-                    neuron.weights[w_index] += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] # /batch_dim
+                    neuron.weights[w_index] += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] - 2*self.regularization_lambda*w_old # /batch_dim
                 
                     # the gradien probably should be diveded by themini batch size
                     
