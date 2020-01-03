@@ -1,5 +1,4 @@
 from .backprop_service import BackPropService
-from .metrics import Metrics 
 from utils import printProgressBar
 class Model():
 
@@ -12,26 +11,22 @@ class Model():
         self.backprop_service = BackPropService(model, momentum_alpha, use_nesterov)
         
 
-    def fit(self, training_set, dim_batch ,epochs):
+    def fit(self, training_set, dim_batch ,epoch):
 
-        for e in range(epochs):
-            printProgressBar(e + 1, epochs, prefix = 'Fitting:', suffix = 'Complete')
-            
-            training_set.shuffle()
-            for batch in training_set.batch(dim_batch): 
+        training_set.shuffle()
+        for batch in training_set.batch(dim_batch): 
                 
-                self.backprop_service.batch_starting()
+            self.backprop_service.batch_starting()
                 
-                for pattern in batch:
-                    self.feed_forward(pattern[1])
-                    self.backprop_service.compute_deltas(self.model, pattern[2])
+            for pattern in batch:
+                self.feed_forward(pattern[1])
+                self.backprop_service.compute_deltas(self.model, pattern[2])
 
-                eta = self._update_learning_rate(e)
-                self.backprop_service.update_weights(self.model, eta, dim_batch)
+            eta = self._update_learning_rate(epoch)
+            self.backprop_service.update_weights(self.model, eta, dim_batch)
                 
-                self.backprop_service.batch_ending()
-            
-            yield self
+            self.backprop_service.batch_ending()
+    
 
 
     def evaluate(self,data_iterator):
@@ -44,6 +39,13 @@ class Model():
             temp_input = layer.feed_forward(temp_input)
         
         return temp_input
+    
+    def forward_dataset(self,ds):
+        outputs = []
+        for batch in ds.batch(1):
+            for pattern in batch:
+                outputs.append(self.feed_forward(pattern[1])) 
+        return outputs
     
     def _update_learning_rate(self, epoch):
         if self.tau == 0:
