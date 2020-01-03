@@ -13,6 +13,7 @@ class ModelBuilder():
         self.tau_decay = 0 # value for learning rate decay 
         self.momentum_alpha = 0 # no momentum
         self.use_nesterov = False
+        self.regularization_labda = 0
 
         
     def input_layer(self,units):
@@ -44,7 +45,7 @@ class ModelBuilder():
         return self
     
     def build(self):
-        return Model(self.model, self.learning_r, self.tau_decay, self.momentum_alpha, self.use_nesterov)
+        return Model(self.model, self.learning_r, self.tau_decay, self.momentum_alpha, self.use_nesterov, self.regularization_labda)
 
     
     def init_weights_random(self, bound):
