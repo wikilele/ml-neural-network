@@ -2,13 +2,13 @@ from .backprop_service import BackPropService
 from utils import printProgressBar
 class Model():
 
-    def __init__(self, model, learning_rate, tau_decay , momentum_alpha, use_nesterov):
+    def __init__(self, model, learning_rate, tau_decay , momentum_alpha, use_nesterov, regularization_lambda):
         self.model = model
         self.learning_rate0 = learning_rate
         self.learning_rate_tau = self.learning_rate0/100
         self.tau = tau_decay
         self.outputs = []
-        self.backprop_service = BackPropService(model, momentum_alpha, use_nesterov)
+        self.backprop_service = BackPropService(model, momentum_alpha, use_nesterov, regularization_lambda)
         
 
     def fit(self, training_set, dim_batch ,epoch):
