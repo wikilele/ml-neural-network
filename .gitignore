@@ -14,3 +14,4 @@ ML-CUP19-TR.csv
 results/plots/*
 results/*/*.csv
 clean_results.py
+results/monks*
