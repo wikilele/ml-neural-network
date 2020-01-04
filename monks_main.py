@@ -1,3 +1,4 @@
+#!/usr/bin/python3.6
 import sys
 from statistics import mode
 
@@ -9,11 +10,11 @@ import results as res
 from utils import printProgressBar
 import json
 
-def monks1(param_grid, model_assessment=False):
+def monks1(task_type, param_grid, model_assessment=False):
     # this file contains the whole dataset
     # we rely on it instead of using the provided splitting 
     # because in that way we simulate a splitting according to hold-out technique
-    dataset = ds.load('datasets/monks-1.test', 'monks')
+    dataset = ds.load('datasets/'+ task_type + '.test', 'monks')
     dataset.shuffle() # bacause data are taken randomly in monks-1.train
     # simple hold-out strategy 
     # ~123 elements for training set as in the original splitting
@@ -121,19 +122,36 @@ def monks1(param_grid, model_assessment=False):
         print("PRECISION " + str(precision))
         print("RECALL " + str(recall))
 
+
+def usage_and_exit():
+    print("USAGE AND EXIT")
+    print("./monks_main.py [monks_task] [model_selection/paramgrid.json] [-a] ")
+    print()
+    print("monks_task can be monks-1, monks-2, monks-3")
+    print("-a  should be given if we want model assessment at the end")
+    print()
+    exit(-1)
+
+
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("USAGE AND EXIT")
-        print("python3.6 monks1_main.py [model_selection/paramgrid.json] [-a] ")
-        print()
-        print("-a  should be given if we want model assessment at the end")
-        exit(-1)
+    if len(sys.argv) < 3:
+        usage_and_exit()
     
-    with open(sys.argv[1],'r') as pgf:
-        param_grid = json.load(pgf)
+    task_type = ""
+    if sys.argv[1] in ["monks-1","monks-2","monks-3"]:
+        task_type = sys.argv[1]
+    else:
+        usage_and_exit()
+
+    try:
+        with open(sys.argv[2],'r') as pgf:
+            param_grid = json.load(pgf)
+    except FileNotFoundError as e:
+        print(e)
+        usage_and_exit()
     
     model_assessment = False
     if len(sys.argv) == 3:
         model_assessment = True
         
-    monks1(param_grid, model_assessment=model_assessment)
+    monks1(task_type, param_grid, model_assessment=model_assessment)
