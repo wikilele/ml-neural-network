@@ -151,7 +151,7 @@ if __name__ == '__main__':
         usage_and_exit()
     
     model_assessment = False
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 4:
         model_assessment = True
         
     monks1(task_type, param_grid, model_assessment=model_assessment)

@@ -32,12 +32,18 @@ class BackPropService:
 
                     # the gradien probably should be diveded by themini batch size 
                     #TODO i'm not sure about dividing by batch_dim
-                    neuron.weights[w_index] += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] # /batch_dim
-                    
+                                       
                     if not self.use_nesterov:
                         # updating with standard momentum
-                        neuron.weights[w_index] += self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
+                        # slide 54 NN-part2
+                        # DELTA_ti = lr*delta_t*x_i + alpha*DELTAold_ti
+                        self.DELTAS[layer_index][neuron_index][w_index] = learning_rate * self.DELTAS[layer_index][neuron_index][w_index] /batch_dim
+                        self.DELTAS[layer_index][neuron_index][w_index] += self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
 
+                        # w_ti = w_ti + DELTA_ti
+                        neuron.weights[w_index] += self.DELTAS[layer_index][neuron_index][w_index]
+                    else:
+                        neuron.weights[w_index] += learning_rate * self.DELTAS[layer_index][neuron_index][w_index]
 
                     # regularization
                     neuron.weights[w_index] -= 2*self.regularization_lambda*w_old
