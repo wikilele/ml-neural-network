@@ -38,7 +38,7 @@ def monks1(param_grid, model_assessment=False):
         for r in range(runs_number): 
             # we are going to init more instances of the model to 
             # perform a better computation of the metrics    
-            nn.from_parameters(params)
+            nn.from_parameters(params, 'sigmoid', 'sigmoid')
             model = nn.build()
 
             ms.add_model(model) 
@@ -49,7 +49,7 @@ def monks1(param_grid, model_assessment=False):
             printProgressBar(e + 1, epochs, prefix = 'Training:', suffix = 'Complete')
 
             # for each model we initialized above
-            for model_id, model in ms.models:
+            for model_id, model in ms.models():
                 # doing one step of training
                 model.fit(trainset,batch_size,e)
                     
