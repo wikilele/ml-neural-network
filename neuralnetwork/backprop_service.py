@@ -26,34 +26,22 @@ class BackPropService:
         for layer_index, layer in enumerate(model[1:]):
             for neuron_index, neuron in enumerate(layer.neurons):
                 for w_index, w in enumerate(neuron.weights):
-                    
-                    w_old = 0
 
                     # we keep the value of w_old for regularization
-                    if self.regularization_lambda != 0:
-                        w_old = w
-                        
+                    w_old = neuron.weights[w_index]
+
+                    # the gradien probably should be diveded by themini batch size 
                     #TODO i'm not sure about dividing by batch_dim
-                    neuron.weights[w_index] += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] - 2*self.regularization_lambda*w_old # /batch_dim
-                
-                    # the gradien probably should be diveded by themini batch size
+                    neuron.weights[w_index] += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] # /batch_dim
                     
                     if not self.use_nesterov:
                         # updating with standard momentum
-                        w += self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
+                        neuron.weights[w_index] += self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
 
-                    # slide 54 NN-part2
-                    # probably it should be
-                    # if not nesterov:
-                    #   self.DELTAS[layer_index][neuron_index][w_index] = learning_rate * self.DELTAS[layer_index][neuron_index][w_index] + self.momentum_alpha * self.DELTAS_OLD[layer_index][neuron_index][w_index]
-                    #   w += self.DELTAS[layer_index][neuron_index][w_index]
-                    # else:
-                    #   w += learning_rate * self.DELTAS[layer_index][neuron_index][w_index] 
 
-                    # w_old = w
-                    # do the stuff above
-                    # w -= lambda * w_old
-        
+                    # regularization
+                    neuron.weights[w_index] -= 2*self.regularization_lambda*w_old
+                    
         if not self.use_nesterov:
             self.DELTAS_OLD = self.DELTAS.copy()
     
