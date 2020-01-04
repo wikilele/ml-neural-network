@@ -23,29 +23,25 @@ def monks1(param_grid, model_assessment=False):
     
 
     for params in ms.grid_search(param_grid):
-        print(params)
-        epochs = 390 # value taken from the monks problem paper
+        
         # if batch size is -1 means we want the batch equal to the entire training set size
-        batch_size = params['batch_size'] if params['batch_size'] > 0 else trainset.size()
-        weights_bound = params['weights_bound']
-        learning_rate = params['learning_rate']
+        params['batch_size'] = params['batch_size'] if params['batch_size'] > 0 else trainset.size()
+        print(params)
+        
+        # getting the parameter
+        epochs = params['epochs'] # value taken from the monks problem paper
+        batch_size = params['batch_size']
 
         # trying different runs, to be independent from random weights init
-        # and to have a bias-variance estimation       
+        # and to have a bias-variance estimation (ensemble learning) when using inference on testset   
         runs_number = 3 # 5 can be used as well
-        models_id = []
         for r in range(runs_number): 
             # we are going to init more instances of the model to 
-            # perform a better computation of the metrics 
-            nn.input_layer(17)
-            nn.hidden_layer(3, activation='sigmoid')
-            nn.output_layer(1, activation='sigmoid')
-            nn.init_weights_random(weights_bound)
-            nn.learning_rate(learning_rate,0)
+            # perform a better computation of the metrics    
+            nn.from_parameters(params)
             model = nn.build()
 
-            model_id = ms.add_model(model) 
-            models_id.append(model_id)
+            ms.add_model(model) 
         
         ms.set_datasets(trainset,validationset)
 
@@ -53,8 +49,7 @@ def monks1(param_grid, model_assessment=False):
             printProgressBar(e + 1, epochs, prefix = 'Training:', suffix = 'Complete')
 
             # for each model we initialized above
-            for model_id in models_id:
-                model = ms.get_model(model_id)
+            for model_id, model in ms.models:
                 # doing one step of training
                 model.fit(trainset,batch_size,e)
                     
@@ -66,12 +61,12 @@ def monks1(param_grid, model_assessment=False):
                 ms.compute_error(model_id, train_outputs, val_outputs)
                 ms.compute_other(model_id, train_outputs, val_outputs, metrics=['acc'],threshold=0.5)
 
-        # val_metrics.compute_other(model,validationset,metrics=['prec','rec'],threshold=0.5)   
-        
+        # getting the average of errors and accuracy         
         avg_tr_error, avg_val_error = ms.avg_mse()
         avg_tr_acc, avg_val_acc = ms.avg_acc()
 
         res.set_task('monks1')
+        # printing the error
         plt.plot(range(epochs), avg_tr_error, '-', label='train', color='black')
         plt.plot(range(epochs), avg_val_error, '-', label='val', color='red')
 
@@ -81,6 +76,7 @@ def monks1(param_grid, model_assessment=False):
         msepath = res.save_plot(plt,'mse')
 
         '''
+        # we might print also the accuracy graph, but it might be not really good looking
         plt.plot(range(epochs), avg_tr_acc, '-', label='train', color='black')
         plt.plot(range(epochs), avg_val_acc, '-', label='val', color='red')
 
@@ -90,22 +86,20 @@ def monks1(param_grid, model_assessment=False):
         res.save_plot(plt,'acc')
         '''
 
-        metrics_values =  {
-            'accuracy': avg_val_acc[-1]
-        #    'precision': val_metrics.prec,
-        #    'recall': val_metrics.rec
-        # this will be used in test phase
-        }
+        # precision and recall will be used during model assessment (see below)
+        final_accuracy = avg_val_acc[-1]
 
-        
-        res.add_result(avg_tr_error[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , metrics_values['accuracy'], msepath)
+        # adding the result
+        res.add_result(avg_tr_error[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , final_accuracy, msepath)
 
     res.add_result_header('mse','batch_s','weights', 'lr', 'acc', 'path')     
     res.save_results()
     
+    # WARNING this code must be executed only once
+    # it must be executed only after model selection otherwise we will invalidate the test set
     if model_assessment:
         # here we want to use the testset to assess the model performances
-        trainied_models = ms.get_models()
+        trainied_models = [m  for _, m in  ms.models()]
         voted_outputs = []
         for batch in testset.batch(1):
             for pattern in batch:
@@ -118,6 +112,7 @@ def monks1(param_grid, model_assessment=False):
 
         metrics = ms.get_metrics()
         target_outputs = [ x[0] for x in testset.data_set[:,2]]
+        # computing acc, rec and precision for the testset
         acc = metrics.accuracy(voted_outputs,target_outputs)
         recall = metrics.recall(voted_outputs, target_outputs)
         precision = metrics.precision(voted_outputs, target_outputs)
