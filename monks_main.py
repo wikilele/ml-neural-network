@@ -2,7 +2,7 @@
 import json
 import sys
 import time
-from statistics import mode
+from statistics import mode, mean
 
 import datasets as ds
 import matplotlib.pyplot as plt
@@ -79,14 +79,18 @@ def monks1(task_type, param_grid, model_assessment=False):
 
         res.set_task(task_type)
 
-        plt = res.plot_error(epochs, avg_tr_error, avg_val_error, params)
+        plt = res.plot_mse(epochs, avg_tr_error, avg_val_error, params, final_accuracy)
         msepath = res.save_plot(plt,'mse')
         
         plt = res.plot_acc(epochs,avg_tr_acc,avg_val_acc,params)
+        res.save_plot(plt,'acc')
         
         # adding the result
         res.add_result(avg_tr_error[-1], avg_val_error[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , params['momentum_alpha'], final_accuracy, msepath)
-        ms.clean()
+        
+        if not model_assessment:
+            # cleaning model selection for next run
+            ms.clean()
 
     res.add_result_header('mse_tr' , 'mse_val','batch_s','weights', 'lr','m_alpha', 'acc', 'path')     
     res.save_results()
@@ -95,16 +99,22 @@ def monks1(task_type, param_grid, model_assessment=False):
     # it must be executed only after model selection otherwise we will invalidate the test set
     if model_assessment:
         # here we want to use the testset to assess the model performances
-        trainied_models = [m  for _, m in  ms.models()]
+        trained_models = [m  for _, m in  ms.models()]
         voted_outputs = []
+        avg_outputs = []
         for batch in testset.batch(1):
             for pattern in batch:
-                tmp_outputs = []
-                for m in trainied_models:
-                    tmp_outputs.append( m.classify(pattern[1],threshold=0.5) )
+                tmp_voted_outputs = []
+                tmp_real_outputs = []
+                for m in trained_models:
+                    class_out , real_out = m.classify(pattern[1],threshold=0.5)
+                    tmp_voted_outputs.append( class_out )
+                    tmp_real_outputs.append(real_out)
                 
                 # we get the most frequent element ( majority vote)
-                voted_outputs.append(mode(tmp_outputs))
+                voted_outputs.append(mode(tmp_voted_outputs))
+                # we get the average output to compute the error
+                avg_outputs.append([mean(tmp_real_outputs)])
 
         metrics = ms.get_metrics()
         target_outputs = [ x[0] for x in testset.data_set[:,2]]
@@ -112,10 +122,14 @@ def monks1(task_type, param_grid, model_assessment=False):
         acc = metrics.accuracy(voted_outputs,target_outputs)
         recall = metrics.recall(voted_outputs, target_outputs)
         precision = metrics.precision(voted_outputs, target_outputs)
+
+        mse = metrics.mean_square_error(avg_outputs, testset.data_set[:,2])
         
         print("ACCURACY " + str(acc))
         print("PRECISION " + str(precision))
         print("RECALL " + str(recall))
+        print("MSE " + str(mse))
+
 
 
 def usage_and_exit():

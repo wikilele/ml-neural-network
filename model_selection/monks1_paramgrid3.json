@@ -1,9 +1,9 @@
 {   
-    "epochs" : [390],
+    "epochs" : [500],
     "batch_size" : [-1],
     "weights_bound" : [0.00009],
-    "learning_rate" : [0.1],
-    "momentum_alpha" : [0.2],
+    "learning_rate" : [0.08],
+    "momentum_alpha" : [0],
     "regularization_lambda" : [0],
 
     "input_layer_dim" : [17],

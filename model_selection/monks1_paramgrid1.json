@@ -1,7 +1,7 @@
 [{
     "epochs" : [390],
     "batch_size" : [-1],
-    "weights_bound" : [0.00009,0.000009],
+    "weights_bound" : [0.00009],
     "learning_rate" : [0.14,0.1,0.08],
     "momentum_alpha" : [0.7,0.5,0.3],
     "regularization_lambda" : [0],
@@ -13,7 +13,7 @@
 },{
     "epochs" : [390],
     "batch_size" : [1],
-    "weights_bound" : [0.00009,0.000009],
+    "weights_bound" : [0.00009],
     "learning_rate" : [0.14,0.1,0.08],
     "momentum_alpha" : [0],
     "regularization_lambda" : [0],
@@ -25,7 +25,7 @@
 },{
     "epochs" : [390],
     "batch_size" : [64,32],
-    "weights_bound" : [0.00009,0.000009],
+    "weights_bound" : [0.00009],
     "learning_rate" : [0.14,0.1,0.08],
     "momentum_alpha" : [0],
     "regularization_lambda" : [0],

@@ -32,9 +32,9 @@ class Model():
     def classify(self, input, threshold = 0):
         out = self.feed_forward(input)
         if out[0] >= threshold:
-            return 1
+            return 1, out[0]
         else:
-            return 0
+            return 0, out[0]
     
     def feed_forward(self, input):
         temp_input = input

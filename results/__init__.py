@@ -45,7 +45,7 @@ def save_results():
         f.write(gridsearch_results_body)
 
 
-def plot_mse(epochs, avg_tr_error, avg_val_error, params):
+def plot_mse(epochs, avg_tr_error, avg_val_error, params, accuracy):
     # plotting the error
     plt.plot(range(epochs), avg_tr_error, ':', label='train', color='black')
     plt.plot(range(epochs), avg_val_error, '-', label='val', color='red')
@@ -55,7 +55,7 @@ def plot_mse(epochs, avg_tr_error, avg_val_error, params):
 
     pltitle = 'MSE -bsize ' + str(params['batch_size']) + " -w "  + str(params['weights_bound']) 
     pltitle += " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha']) 
-    pltitle += ' -acc ' + "{0:.2f}".format(final_accuracy)
+    pltitle += ' -acc ' + "{0:.2f}".format(accuracy)
     plt.title(pltitle, fontsize=9) 
     
     return plt
