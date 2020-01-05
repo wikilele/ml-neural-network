@@ -68,8 +68,8 @@ def monks1(task_type, param_grid, model_assessment=False):
 
         res.set_task(task_type)
         # printing the error
-        plt.plot(range(epochs), avg_tr_error, '-', label='train', color='black')
-        plt.plot(range(epochs), avg_val_error, ':', label='val', color='red')
+        plt.plot(range(epochs), avg_tr_error, ':', label='train', color='black')
+        plt.plot(range(epochs), avg_val_error, '-', label='val', color='red')
 
         plt.xlabel('epochs') 
         plt.legend(loc='upper right') 
@@ -78,8 +78,8 @@ def monks1(task_type, param_grid, model_assessment=False):
 
         
         # we might print also the accuracy graph, but it might be not really good looking
-        plt.plot(range(epochs), avg_tr_acc, '-', label='train', color='black')
-        plt.plot(range(epochs), avg_val_acc, ':', label='val', color='red')
+        plt.plot(range(epochs), avg_tr_acc, ':', label='train', color='black')
+        plt.plot(range(epochs), avg_val_acc, '-', label='val', color='red')
 
         plt.xlabel('epochs') 
         plt.legend(loc='lower right') 
