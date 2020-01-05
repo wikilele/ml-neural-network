@@ -1,5 +1,7 @@
 #!/usr/bin/python3.6
+import json
 import sys
+import time
 from statistics import mode
 
 import datasets as ds
@@ -8,18 +10,22 @@ import model_selection as ms
 import neuralnetwork as nn
 import results as res
 from utils import printProgressBar
-import json
+
 
 def monks1(task_type, param_grid, model_assessment=False):
-    # this file contains the whole dataset
-    # we rely on it instead of using the provided splitting 
+    # this file contains the whole dataset, we rely on it instead of using the provided splitting 
     # because in that way we simulate a splitting according to hold-out technique
     dataset = ds.load('datasets/'+ task_type + '.test', 'monks')
     dataset.shuffle() # bacause data are taken randomly in monks-1.train
     # simple hold-out strategy 
-    # ~123 elements for training set as in the original splitting
-    # validation set is half of training set
+    # ~123 elements for training set as in the original splitting (monks-1, monks-3)
+    splitting = 43/100
+    if task_type == 'monks-2':
+        # monks-2 uses ~169 elements in the training set
+        splitting = 59/100
+
     trainvalset, testset = dataset.split(43/100)
+    # validation set is half of training set
     trainset, validationset = trainvalset.split(66.6/100)
     
 
@@ -29,7 +35,6 @@ def monks1(task_type, param_grid, model_assessment=False):
         params['batch_size'] = params['batch_size'] if params['batch_size'] > 0 else trainset.size()
         print(params)
         
-        # getting the parameter
         epochs = params['epochs'] # value taken from the monks problem paper
         batch_size = params['batch_size']
 
@@ -46,6 +51,7 @@ def monks1(task_type, param_grid, model_assessment=False):
         
         ms.set_datasets(trainset,validationset)
 
+        start_time = time.time()
         for e in range(epochs):
             printProgressBar(e + 1, epochs, prefix = 'Training:', suffix = 'Complete')
 
@@ -62,6 +68,9 @@ def monks1(task_type, param_grid, model_assessment=False):
                 ms.compute_error(model_id, train_outputs, val_outputs)
                 ms.compute_other(model_id, train_outputs, val_outputs, metrics=['acc'],threshold=0.5)
 
+        training_time = time.time() - start_time
+        print("TRAINING TIME " + str(training_time) + " seconds") 
+
         # getting the average of errors and accuracy         
         avg_tr_error, avg_val_error = ms.avg_mse()
         avg_tr_acc, avg_val_acc = ms.avg_acc()
@@ -69,31 +78,17 @@ def monks1(task_type, param_grid, model_assessment=False):
         final_accuracy = avg_val_acc[-1]
 
         res.set_task(task_type)
-        # printing the error
-        plt.plot(range(epochs), avg_tr_error, ':', label='train', color='black')
-        plt.plot(range(epochs), avg_val_error, '-', label='val', color='red')
 
-        plt.xlabel('epochs') 
-        plt.legend(loc='upper right') 
-        pltitle = 'MSE -bsize ' + str(batch_size) + " -w "  + str(params['weights_bound']) + " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha']) + ' -acc ' + "{0:.2f}".format(final_accuracy)
-        plt.title(pltitle, fontsize=9) 
+        plt = res.plot_error(epochs, avg_tr_error, avg_val_error, params)
         msepath = res.save_plot(plt,'mse')
-
         
-        # we might print also the accuracy graph, but it might be not really good looking
-        plt.plot(range(epochs), avg_tr_acc, ':', label='train', color='black')
-        plt.plot(range(epochs), avg_val_acc, '-', label='val', color='red')
-
-        plt.xlabel('epochs') 
-        plt.legend(loc='lower right') 
-        plt.title('Accuracy')
-        res.save_plot(plt,'acc')
+        plt = res.plot_acc(epochs,avg_tr_acc,avg_val_acc,params)
         
         # adding the result
-        res.add_result(avg_tr_error[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , params['momentum_alpha'], final_accuracy, msepath)
+        res.add_result(avg_tr_error[-1], avg_val_error[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , params['momentum_alpha'], final_accuracy, msepath)
         ms.clean()
 
-    res.add_result_header('mse','batch_s','weights', 'lr','m_alpha', 'acc', 'path')     
+    res.add_result_header('mse_tr' , 'mse_val','batch_s','weights', 'lr','m_alpha', 'acc', 'path')     
     res.save_results()
     
     # WARNING this code must be executed only once

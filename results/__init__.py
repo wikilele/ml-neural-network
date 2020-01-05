@@ -43,3 +43,36 @@ def save_results():
     with open('results/' + TASK + '/grid_results.csv','w+') as f:
         f.write(gridsearch_results_header)
         f.write(gridsearch_results_body)
+
+
+def plot_mse(epochs, avg_tr_error, avg_val_error, params):
+    # plotting the error
+    plt.plot(range(epochs), avg_tr_error, ':', label='train', color='black')
+    plt.plot(range(epochs), avg_val_error, '-', label='val', color='red')
+
+    plt.xlabel('epochs') 
+    plt.legend(loc='upper right') 
+
+    pltitle = 'MSE -bsize ' + str(params['batch_size']) + " -w "  + str(params['weights_bound']) 
+    pltitle += " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha']) 
+    pltitle += ' -acc ' + "{0:.2f}".format(final_accuracy)
+    plt.title(pltitle, fontsize=9) 
+    
+    return plt
+    
+
+
+def plot_acc(epochs, avg_tr_acc, avg_val_acc, params):
+    # plotting the acc
+    plt.plot(range(epochs), avg_tr_acc, ':', label='train', color='black')
+    plt.plot(range(epochs), avg_val_acc, '-', label='val', color='red')
+
+    plt.xlabel('epochs') 
+    plt.legend(loc='lower right') 
+
+    pltitle = 'ACC -bsize ' + str(params['batch_size']) + " -w "  + str(params['weights_bound']) 
+    pltitle += " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha']) 
+
+    plt.title(pltitle, fontsize=9) 
+    
+    return plt
