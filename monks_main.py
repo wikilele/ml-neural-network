@@ -78,7 +78,7 @@ def monks1(task_type, param_grid, model_assessment=False):
 
         '''
         # we might print also the accuracy graph, but it might be not really good looking
-        plt.plot(range(epochs), avg_tr_acc, '-', label='train', color='black')
+        plt.plot(range(epochs), avg_tr_acc, ':', label='train', color='black')
         plt.plot(range(epochs), avg_val_acc, '-', label='val', color='red')
 
         plt.xlabel('epochs') 
