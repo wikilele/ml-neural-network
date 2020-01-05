@@ -74,7 +74,11 @@ def avg_acc():
 def get_metrics():
     return Metrics()
 
-
+def clean():
+    global __models_index
+    global __models
+    __models_index = 0
+    __models = {}
 
 # https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/model_selection/_search.py
 def grid_search(param_grid):

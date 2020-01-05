@@ -65,6 +65,8 @@ def monks1(task_type, param_grid, model_assessment=False):
         # getting the average of errors and accuracy         
         avg_tr_error, avg_val_error = ms.avg_mse()
         avg_tr_acc, avg_val_acc = ms.avg_acc()
+        # precision and recall will be used during model assessment (see below)
+        final_accuracy = avg_val_acc[-1]
 
         res.set_task(task_type)
         # printing the error
@@ -73,7 +75,8 @@ def monks1(task_type, param_grid, model_assessment=False):
 
         plt.xlabel('epochs') 
         plt.legend(loc='upper right') 
-        plt.title('Mean Square Error') 
+        pltitle = 'MSE -bsize ' + str(batch_size) + " -w "  + str(params['weights_bound']) + " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha']) + ' -acc ' + "{0:.2f}".format(final_accuracy)
+        plt.title(pltitle, fontsize=9) 
         msepath = res.save_plot(plt,'mse')
 
         
@@ -86,14 +89,11 @@ def monks1(task_type, param_grid, model_assessment=False):
         plt.title('Accuracy')
         res.save_plot(plt,'acc')
         
-
-        # precision and recall will be used during model assessment (see below)
-        final_accuracy = avg_val_acc[-1]
-
         # adding the result
-        res.add_result(avg_tr_error[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , final_accuracy, msepath)
+        res.add_result(avg_tr_error[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , params['momentum_alpha'], final_accuracy, msepath)
+        ms.clean()
 
-    res.add_result_header('mse','batch_s','weights', 'lr', 'acc', 'path')     
+    res.add_result_header('mse','batch_s','weights', 'lr','m_alpha', 'acc', 'path')     
     res.save_results()
     
     # WARNING this code must be executed only once
