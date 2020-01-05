@@ -68,7 +68,7 @@ def monks1(task_type, param_grid, model_assessment=False):
 
         res.set_task(task_type)
         # printing the error
-        plt.plot(range(epochs), avg_tr_error, '-', label='train', color='black')
+        plt.plot(range(epochs), avg_tr_error, ':', label='train', color='black')
         plt.plot(range(epochs), avg_val_error, '-', label='val', color='red')
 
         plt.xlabel('epochs') 
