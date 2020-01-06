@@ -12,11 +12,11 @@ import results as res
 from utils import printProgressBar
 
 
-def monks1(task_type, param_grid, model_assessment=False):
+def monks(task_type, param_grid, model_assessment=False):
     # this file contains the whole dataset, we rely on it instead of using the provided splitting 
     # because in that way we simulate a splitting according to hold-out technique
     dataset = ds.load('datasets/'+ task_type + '.test', 'monks')
-    dataset.shuffle() # bacause data are taken randomly in monks-1.train
+    dataset.shuffle() # bacause data are taken randomly in monks-*.train
     # simple hold-out strategy 
     # ~123 elements for training set as in the original splitting (monks-1, monks-3)
     splitting = 43/100
@@ -164,4 +164,4 @@ if __name__ == '__main__':
     if len(sys.argv) == 4:
         model_assessment = True
         
-    monks1(task_type, param_grid, model_assessment=model_assessment)
+    monks(task_type, param_grid, model_assessment=model_assessment)
