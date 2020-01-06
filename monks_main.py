@@ -24,7 +24,7 @@ def monks1(task_type, param_grid, model_assessment=False):
         # monks-2 uses ~169 elements in the training set
         splitting = 59/100
 
-    trainvalset, testset = dataset.split(43/100)
+    trainvalset, testset = dataset.split(splitting)
     # validation set is half of training set
     trainset, validationset = trainvalset.split(66.6/100)
     
@@ -138,6 +138,7 @@ def usage_and_exit():
     print()
     print("monks_task can be monks-1, monks-2, monks-3")
     print("-a  should be given if we want model assessment at the end")
+    print("call with -a only if not performing grid search")
     print()
     exit(-1)
 
