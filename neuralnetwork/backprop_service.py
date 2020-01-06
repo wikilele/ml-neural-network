@@ -1,5 +1,5 @@
 import numpy as np
-
+import copy
 class BackPropService:
 
     def __init__(self, model,momentum_alpha, use_nesterov, regularization_lambda):
@@ -18,7 +18,7 @@ class BackPropService:
         
         if not use_nesterov:
             # the DELTAS OLD matrix will be used for standard momentum
-            self.DELTAS_OLD = self.DELTAS.copy()
+            self.DELTAS_OLD = copy.deepcopy(self.DELTAS)
         
         self.regularization_lambda = regularization_lambda
         
@@ -46,7 +46,7 @@ class BackPropService:
                     neuron.weights[w_index] -= 2*self.regularization_lambda*w_old
                     
         if not self.use_nesterov:
-            self.DELTAS_OLD = self.DELTAS.copy()
+            self.DELTAS_OLD = copy.deepcopy(self.DELTAS)
     
     def _update_DELTAS_matrix(self,deltas,layer_index, layer):
         # for each computed delta (one delta per neuron)
