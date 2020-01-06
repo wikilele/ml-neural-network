@@ -1,5 +1,5 @@
 [{
-    "epochs" : [390],
+    "epochs" : [600],
     "batch_size" : [-1],
     "weights_bound" : [0.00009],
     "learning_rate" : [0.14,0.1,0.08],
@@ -11,7 +11,7 @@
     "hidden_layer_dim" : [[3]],
     "output_layer_dim" : [1] 
 },{
-    "epochs" : [390],
+    "epochs" : [600],
     "batch_size" : [1],
     "weights_bound" : [0.00009],
     "learning_rate" : [0.14,0.1,0.08],
@@ -23,7 +23,7 @@
     "hidden_layer_dim" : [[3]],
     "output_layer_dim" : [1] 
 },{
-    "epochs" : [390],
+    "epochs" : [600],
     "batch_size" : [64,32],
     "weights_bound" : [0.00009],
     "learning_rate" : [0.14,0.1,0.08],
