@@ -48,3 +48,15 @@ class TestModelBuilder(unittest.TestCase):
 
         self.mb.output_layer(2)
         assert len(self.mb.model[-1].neurons[0].weights) == 6
+    
+    def test_model1(self):
+
+        self.mb.input_layer(3)
+        self.mb.hidden_layer(3)
+        self.mb.hidden_layer(3)
+        self.mb.output_layer(2)
+
+        assert len(self.mb.model[-1].neurons) == 2
+        assert len(self.mb.model[-2].neurons) == 3
+        assert len(self.mb.model[-3].neurons) == 3
+        

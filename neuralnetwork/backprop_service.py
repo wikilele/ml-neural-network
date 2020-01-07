@@ -15,7 +15,7 @@ class BackPropService:
             # prev_len + 1 beacuse we consider also the bias
             self.DELTAS.append(np.zeros( (len(layer.neurons), prev_len + 1) ))
             prev_len = len(layer.neurons)
-        
+
         if not use_nesterov:
             # the DELTAS OLD matrix will be used for standard momentum
             self.DELTAS_OLD = copy.deepcopy(self.DELTAS)
@@ -53,7 +53,7 @@ class BackPropService:
         for i in range(len(deltas)):
             # for each weight j of the neuron i. 
             for j in range(np.size(self.DELTAS[layer_index], 1)):
-                # update the DELTA of weight j from neuron i of layer    
+                # update the DELTA of weight j from neuron i of layer 
                 self.DELTAS[layer_index][i][j] += deltas[i] * layer.neurons[i].dnet_dwj(j)
 
     def compute_deltas(self, model, target_output):
@@ -102,7 +102,7 @@ class BackPropService:
                 current_deltas = np.append(current_deltas, h_delta)
             
             # layer_index - 1 cause if I'm at pos 1 in rev_hidden_layers, I'm refering to the hidden layer 0 in the model without input layer
-            self._update_DELTAS_matrix(current_deltas, layer_index - 1, layer)
+            self._update_DELTAS_matrix(current_deltas, -layer_index - 1, layer)
             # in the next iteration we will use the deltas of this iteration
             prev_deltas = current_deltas
             
