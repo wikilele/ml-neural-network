@@ -50,7 +50,7 @@ class Dataset():
             for i in range(1, 3):
                 for j, elem in enumerate(line[i]):
                     line[i][j] = (abs(elem) - min_value)/(max_value - min_value)
-    
+                
     def print(self):
         print(self.data_set)
 
