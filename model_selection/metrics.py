@@ -59,8 +59,7 @@ class Metrics:
         tmp = 0
         for i in range(len(output)):
             for j in range(len(output[i])):
-                tmp += (target_output[i][j] - output[i][j])**2
-            tmp = sqrt(tmp)
+                tmp += sqrt((target_output[i][j] - output[i][j])**2)
 
         self.mee.append(tmp/len(output))
         return self.mee[-1]
