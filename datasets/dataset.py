@@ -42,14 +42,17 @@ class Dataset():
         return set1, set2
 
     def normalize(self):
+        data_set = self.data_set.T
+
         for i,line in enumerate(self.data_set):
             # that is because line is a list of lists and line[0] are the IDs
-            max_value = max(max(map(abs, line[1])), max(map(abs, line[2])))
-            min_value = min(min(map(abs, line[1])), min(map(abs, line[2])))
+            max_value = max(max(line[1]), max(line[2]))
+            min_value = min(min(line[1]), min(line[2]))
 
             for i in range(1, 3):
                 for j, elem in enumerate(line[i]):
-                    line[i][j] = (abs(elem) - min_value)/(max_value - min_value)
+                    line[i][j] = (elem - min_value)/(max_value - min_value)
+        
                 
     def print(self):
         print(self.data_set)
