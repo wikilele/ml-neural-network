@@ -24,7 +24,7 @@ def cup(param_grid):
         epochs = params['epochs']
         batch_size = params['batch_size']
 
-        runs_number = 3
+        runs_number = 1
         for run in range(runs_number):
             nn.from_parameters(params, 'sigmoid', 'linear')
             model = nn.build()
@@ -51,7 +51,7 @@ def cup(param_grid):
         avg_tr_mee, avg_val_mee = ms.avg_mee()
 
         res.set_task('CUP')
-        plt = res.plot_mse(epochs, avg_tr_mse, avg_val_mse, params, 0)
+        plt = res.plot_mse(epochs, avg_tr_mse, avg_val_mse, params)
         msepath = res.save_plot(plt, 'mse')
 
         

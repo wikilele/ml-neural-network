@@ -29,5 +29,5 @@ class Linear(ActivationFunction):
     def compute_output(self, input):
         return input
     
-    def first_derivative(self, input): # TODO i think this is correct but better to check
+    def first_derivative(self, input):
         return 1
