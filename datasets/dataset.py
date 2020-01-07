@@ -40,7 +40,20 @@ class Dataset():
         set2 = Dataset(self.data_set[splitting_index:size])
         
         return set1, set2
-               
+
+    def normalize(self):
+        for i,line in enumerate(self.data_set):
+            # that is because line is a list of lists and line[0] are the IDs
+            max_value = max(max(map(abs, line[1])), max(map(abs, line[2])))
+            min_value = min(min(map(abs, line[1])), min(map(abs, line[2])))
+
+            for i in range(1, 3):
+                for j, elem in enumerate(line[i]):
+                    line[i][j] = (abs(elem) - min_value)/(max_value - min_value)
+    
+    def print(self):
+        print(self.data_set)
+
         
 
 class MonkDataset:
@@ -78,18 +91,16 @@ class CupDataset:
         dataset = []
         with open(datapath, 'r') as file:
             for i,line in enumerate(file):
-                # the first 7 lines shouldn't be counted
-                if i > 6:
-                    targets = []
-                    words_list = line.strip().split(',')
-                    id = words_list[0]
-                    targets.append(float(words_list[-2]))
-                    targets.append(float(words_list[-1]))
-                    inputs = list(map(float,words_list[1:21]))
+                targets = []
+                words_list = line.strip().split(',')
+                id = words_list[0]
+                targets.append(float(words_list[-2]))
+                targets.append(float(words_list[-1]))
+                inputs = list(map(float,words_list[1:21]))
 
-                    dataset.append((id,inputs, targets))
+                dataset.append((id,inputs, targets))
     
-        return Dataset(np.array(dataset))
+        return Dataset(np.array(dataset))   
 
 
 
