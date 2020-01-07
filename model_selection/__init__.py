@@ -61,6 +61,17 @@ def avg_mse():
     
     return arrays_mean(tr_erros), arrays_mean(val_errors)
 
+def avg_mee():
+    global __models
+
+    tr_erros = []
+    val_errors = []
+    for m_info in __models.values():
+        tr_erros.append(m_info['training_metrics'].mee)
+        val_errors.append(m_info['validation_metrics'].mee)
+    
+    return arrays_mean(tr_erros), arrays_mean(val_errors)
+
 def avg_acc():
     global __models
     tr_acc = []

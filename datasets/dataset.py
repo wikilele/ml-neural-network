@@ -76,7 +76,7 @@ class CupDataset:
     @staticmethod
     def load(datapath):
         dataset = []
-        with open(path, 'r') as file:
+        with open(datapath, 'r') as file:
             for i,line in enumerate(file):
                 # the first 7 lines shouldn't be counted
                 if i > 6:

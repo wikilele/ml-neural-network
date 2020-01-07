@@ -60,7 +60,22 @@ def plot_mse(epochs, avg_tr_error, avg_val_error, params, accuracy):
     plt.title(pltitle, fontsize=12) 
     
     return plt
+# TODO maybe refactor this two functions
+def plot_mee(epochs, avg_tr_error, avg_val_error, params, accuracy):
+    # plotting the error
+    plt.plot(range(epochs), avg_tr_error, ':', label='train', color='black')
+    plt.plot(range(epochs), avg_val_error, '-', label='val', color='red')
+
+    plt.xlabel('epochs') 
+    plt.legend(loc='upper right') 
+
+    pltitle = 'MEE -bsize ' + str(params['batch_size']) + " -w "  + str(params['weights_bound']) 
+    pltitle += " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha'])
+    pltitle += " -regl " + str(params['regularization_lambda']) 
+    pltitle += ' -acc ' + "{0:.2f}".format(accuracy)
+    plt.title(pltitle, fontsize=12) 
     
+    return plt
 
 
 def plot_acc(epochs, avg_tr_acc, avg_val_acc, params):
