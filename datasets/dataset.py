@@ -44,7 +44,7 @@ class Dataset():
     def normalize(self):
         data_set = self.data_set.T
 
-        for i,line in enumerate(self.data_set):
+        for i,line in enumerate(data_set):
             # that is because line is a list of lists and line[0] are the IDs
             max_value = max(max(line[1]), max(line[2]))
             min_value = min(min(line[1]), min(line[2]))
