@@ -71,5 +71,25 @@ class MonkDataset:
                     encoded_inputs.append(0)
         return encoded_inputs
     
+class CupDataset:
+
+    @staticmethod
+    def load(datapath):
+        dataset = []
+        with open(path, 'r') as file:
+            for i,line in enumerate(file):
+                # the first 7 lines shouldn't be counted
+                if i > 6:
+                    targets = []
+                    words_list = line.strip().split(',')
+                    id = words_list[0]
+                    targets.append(float(words_list[-2]))
+                    targets.append(float(words_list[-1]))
+                    inputs = list(map(float,words_list[1:21]))
+
+                    dataset.append((id,inputs, targets))
+    
+        return Dataset(np.array(dataset))
+
 
 

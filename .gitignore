@@ -6,6 +6,7 @@ __pycache__
 monks-1.train
 monks-1.test
 ML-CUP19-TR.csv
+datasets/.~lock.ML-CUP19-TR.csv#
 
 # results
 ~results/plots

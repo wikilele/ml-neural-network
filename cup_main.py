@@ -10,7 +10,7 @@ import results as res
 from datasets.dataset import Dataset
 
 def cup(param_grid):
-    dataset = load_cup('datasets/ML-CUP19-TR.csv')
+    dataset = ds.load('datasets/ML-CUP19-TR.csv','CUP')
     trainset, validationset = dataset.split(60/100)
 
     for params in ms.grid_search(param_grid):
@@ -61,23 +61,7 @@ def cup(param_grid):
         res.add_result_header('mse_tr' , 'mse_val', 'mee_tr', 'mee_val', 'batch_s','weights', 'lr','m_alpha', 'acc', 'path')     
         res.save_results()
 
-    
-def load_cup(path):
-    dataset = []
-    with open(path, 'r') as file:
-        for i,line in enumerate(file):
-            targets = []
-            words_list = line.strip().split(',')
-            id = words_list[0]
-            targets.append(float(words_list[-1]))
-            targets.append(float(words_list[-2]))
-            inputs = list(map(float,words_list[1:21]))
-
-            dataset.append((id,inputs, targets))
-    
-    return Dataset(np.array(dataset))
-
-    
+   
 
 
 if __name__ == '__main__':
