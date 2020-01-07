@@ -9,7 +9,7 @@ TASK = None
 
 def set_task(task_name):
     global TASK
-    if task_name not in ['monks-1','monks-2','monks-3']:
+    if task_name not in ['monks-1','monks-2','monks-3', 'CUP']:
         raise TypeError
 
     TASK = task_name

@@ -1,3 +1,5 @@
+from math import sqrt
+
 class Metrics:
     def __init__(self):
         self.acc = []
@@ -53,7 +55,15 @@ class Metrics:
         return self.mse[-1]
     
     def mean_euclidian_error(self, output, target_output):
-        pass
+        mee = 0
+        tmp = 0
+        for i in range(len(output)):
+            for j in range(len(output[i])):
+                tmp += (target_output[i][j] - output[i][j])**2
+            tmp = sqrt(tmp)
+
+        self.mee.append(tmp/len(output))
+        return self.mee[-1]
     
     def root_mean_square_error(self, output, target_output):
         pass
