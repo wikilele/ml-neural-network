@@ -54,7 +54,8 @@ def plot_mse(epochs, avg_tr_error, avg_val_error, params, accuracy):
     plt.legend(loc='upper right') 
 
     pltitle = 'MSE -bsize ' + str(params['batch_size']) + " -w "  + str(params['weights_bound']) 
-    pltitle += " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha']) 
+    pltitle += " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha'])
+    pltitle += " -regl " + str(params['regularization_lambda']) 
     pltitle += ' -acc ' + "{0:.2f}".format(accuracy)
     plt.title(pltitle, fontsize=12) 
     
@@ -72,7 +73,7 @@ def plot_acc(epochs, avg_tr_acc, avg_val_acc, params):
 
     pltitle = 'ACC -bsize ' + str(params['batch_size']) + " -w "  + str(params['weights_bound']) 
     pltitle += " -lr " + str(params['learning_rate']) + ' -maplha ' + str(params['momentum_alpha']) 
-
-    plt.title(pltitle, fontsize=9) 
+    pltitle += " -regl " + str(params['regularization_lambda']) 
+    plt.title(pltitle, fontsize=12) 
     
     return plt
