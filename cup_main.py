@@ -59,7 +59,7 @@ def cup(param_grid):
         res.save_plot(plt, 'mee')
         
 
-        res.add_result(avg_tr_mse[-1], avg_val_mse[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , params['momentum_alpha'], msepath)
+        res.add_result(avg_tr_mse[-1], avg_val_mse[-1], avg_tr_mee[-1], avg_val_mee[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , params['momentum_alpha'], msepath)
         ms.clean()
 
         res.add_result_header('mse_tr' , 'mse_val', 'mee_tr', 'mee_val', 'batch_s','weights', 'lr','m_alpha', 'acc', 'path')     
