@@ -1,5 +1,9 @@
 import random
 import numpy as np
+
+max_values = []
+min_values = []
+
 class Dataset():
 
     def __init__(self, numpy_dataset):
@@ -41,28 +45,31 @@ class Dataset():
         
         return set1, set2
 
-    def _normalize(self,data_index):
+    def _normalize(self,data_index, trainset):
         # if data_index == 1 we consider the input patterns
         # if data_index == 2 we consider the output
         # for each column
         for i in range(len(self.data_set[:,data_index][0])):
-            # the first value of the tmp varaibles is setted in this way
-            # cause we can't assume an upper or lower bound
-            tmp_max = self.data_set[:,data_index][0][i]
-            tmp_min = self.data_set[:,data_index][0][i]
-            # for each row we comput max and min of the row
-            for j in range(len(self.data_set)):
-                tmp_max = max([tmp_max, self.data_set[:,data_index][j][i]])
-                tmp_min = min([tmp_min, self.data_set[:,data_index][j][i]])
+            if trainset:
+                # the first value of the tmp varaibles is setted in this way
+                # cause we can't assume an upper or lower bound
+                tmp_max = self.data_set[:,data_index][0][i]
+                tmp_min = self.data_set[:,data_index][0][i]
+                # for each row we comput max and min of the row
+                for j in range(len(self.data_set)):
+                    tmp_max = max([tmp_max, self.data_set[:,data_index][j][i]])
+                    tmp_min = min([tmp_min, self.data_set[:,data_index][j][i]])
+                max_values.append(tmp_max)
+                min_values.append(tmp_min)
 
             # update each element of column i
             for j in range(len(self.data_set)):
-                self.data_set[:,data_index][j][i] = (self.data_set[:,data_index][j][i] - tmp_min) / (tmp_max - tmp_min)
+                self.data_set[:,data_index][j][i] = (self.data_set[:,data_index][j][i] - min_values[i]) / (max_values[i] - min_values[i])
 
 
-    def normalize(self):
-        self._normalize(1)
-        self._normalize(2)
+    def normalize(self, trainset):
+        self._normalize(1, trainset)
+        self._normalize(2, trainset)
 
         
     def print(self):

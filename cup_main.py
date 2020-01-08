@@ -12,11 +12,13 @@ from datasets.dataset import Dataset
 
 def cup(param_grid):
     dataset = ds.load('datasets/ML-CUP19-TR.csv','CUP')
-    dataset.normalize()
     # 25% testset, 75% training set + validationset
     trainvalset, testset = dataset.split(75/100) 
     # if we use hold out: validation set == 1/2 trainingset 
     trainset, validationset = trainvalset.split(66.6/100)
+    trainset.normalize(trainset = 1)
+    validationset.normalize(trainset = 0)
+    testset.normalize(trainset = 0)
 
     for params in ms.grid_search(param_grid):
         params['batch_size'] = params['batch_size'] if params['batch_size'] > 0 else trainset.size()
