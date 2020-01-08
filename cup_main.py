@@ -15,11 +15,14 @@ def cup(param_grid):
     # 25% testset, 75% training set + validationset
     trainvalset, testset = dataset.split(75/100) 
     # if we use hold out: validation set == 1/2 trainingset
-   
     trainset, validationset = trainvalset.split(66.6/100)
-    trainset.normalize(trainset = 1)
-    validationset.normalize(trainset = 0)
-    testset.normalize(trainset = 0)
+    
+    # we get the min and max values from the training set and 
+    # we use them to normalize all the other datasets
+    min_val, max_val = testset.get_min_max()
+    trainset.normalize(min_val, max_val)
+    validationset.normalize(min_val, max_val)
+    testset.normalize(min_val, max_val)
 
     for params in ms.grid_search(param_grid):
         params['batch_size'] = params['batch_size'] if params['batch_size'] > 0 else trainset.size()

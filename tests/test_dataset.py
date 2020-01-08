@@ -28,5 +28,7 @@ class TestDataset(unittest.TestCase):
 
     def test_normalize(self):
         ds = Dataset(np.array([ [1,[-2,1,2],[1]] , [2,[1,1.5,1],[1.5]], [3,[4,3,0],[1]] ]))
-        ds.normalize()
-        ds.print()
+        minv, maxv = ds.get_min_max()
+        ds.normalize(minv, maxv)
+        
+        assert np.array_equal(ds.data_set,np.array([ [1,[0.0,0.0,1.0],[0.0]] , [2,[0.5,0.25,0.5],[1.0]], [3,[1.0,1.0,0.0],[0.0]] ]) )
