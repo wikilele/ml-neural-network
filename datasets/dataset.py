@@ -41,19 +41,30 @@ class Dataset():
         
         return set1, set2
 
+    def _normalize(self,data_index):
+        # if data_index == 1 we consider the input patterns
+        # if data_index == 2 we consider the output
+        # for each column
+        for i in range(len(self.data_set[:,data_index][0])):
+            # the first value of the tmp varaibles is setted in this way
+            # cause we can't assume an upper or lower bound
+            tmp_max = self.data_set[:,data_index][0][i]
+            tmp_min = self.data_set[:,data_index][0][i]
+            # for each row we comput max and min of the row
+            for j in range(len(self.data_set)):
+                tmp_max = max([tmp_max, self.data_set[:,data_index][j][i]])
+                tmp_min = min([tmp_min, self.data_set[:,data_index][j][i]])
+
+            # update each element of column i
+            for j in range(len(self.data_set)):
+                self.data_set[:,data_index][j][i] = (self.data_set[:,data_index][j][i] - tmp_min) / (tmp_max - tmp_min)
+
+
     def normalize(self):
-        data_set = self.data_set.T
+        self._normalize(1)
+        self._normalize(2)
 
-        for i,line in enumerate(data_set):
-            # that is because line is a list of lists and line[0] are the IDs
-            max_value = max(max(line[1]), max(line[2]))
-            min_value = min(min(line[1]), min(line[2]))
-
-            for i in range(1, 3):
-                for j, elem in enumerate(line[i]):
-                    line[i][j] = (elem - min_value)/(max_value - min_value)
         
-                
     def print(self):
         print(self.data_set)
 

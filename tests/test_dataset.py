@@ -1,5 +1,6 @@
 import unittest
 from datasets.dataset import *
+import numpy as np
 
 class TestDataset(unittest.TestCase):
     def setUp(self):
@@ -20,6 +21,12 @@ class TestDataset(unittest.TestCase):
             assert len(b) == 3 or len(b) == 1
     
     def test_splitting(self):
-        train, val = self.ds.split()
+        train, val = self.ds.split(2/3)
         assert train.size() == 4
         assert val.size() == 2
+
+
+    def test_normalize(self):
+        ds = Dataset(np.array([ [1,[-2,1,2],[1]] , [2,[1,1.5,1],[1.5]], [3,[4,3,0],[1]] ]))
+        ds.normalize()
+        ds.print()
