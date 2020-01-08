@@ -62,7 +62,7 @@ class Dataset():
 
     def normalize(self):
         self._normalize(1)
-        self._normalize(2)
+        #self._normalize(2)
 
         
     def print(self):
