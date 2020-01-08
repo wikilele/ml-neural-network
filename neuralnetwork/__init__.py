@@ -40,7 +40,7 @@ def from_parameters(params, hidden_activation_func, output_activation_func):
     l_rate = params['learning_rate']
     momentum_alpha = params['momentum_alpha']
     regularization_lambda = params['regularization_lambda']
-    use_nesterov =  params['use_nesterov'] if 'use_nestrov' in params.keys() else False
+    use_nesterov =  params['use_nesterov'] if 'use_nesterov' in params.keys() else False
 
     input_dim = params['input_layer_dim']
     hidden_layer_num = params['hidden_layer_number']

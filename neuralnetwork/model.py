@@ -16,7 +16,7 @@ class Model():
         training_set.shuffle()
         for batch in training_set.batch(dim_batch): 
                 
-            self.backprop_service.batch_starting()
+            self.backprop_service.batch_starting(self.model)
                 
             for pattern in batch:
                 self.feed_forward(pattern[1])

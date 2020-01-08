@@ -106,7 +106,7 @@ class BackPropService:
             # in the next iteration we will use the deltas of this iteration
             prev_deltas = current_deltas
             
-    def batch_starting(self):   
+    def batch_starting(self, model):   
         if self.use_nesterov:
             for layer_index, layer in enumerate(model[1:]):
                 for neuron_index, neuron in enumerate(layer.neurons):
