@@ -76,8 +76,16 @@ class Dataset():
     def normalize(self, min_values, max_values):
         self._normalize(1, min_values[0], max_values[0])
         self._normalize(2, min_values[1], max_values[1])
+    
+    @staticmethod
+    def denormalize( outputs, min_values, max_values):
 
-        
+        for i in range(len(outputs)):
+            for j in range(len(outputs[i])):
+                outputs[i][j] = (outputs[i][j] * (max_values[1][j] - min_values[1][j]) ) +  min_values[1][j]
+
+        return outputs
+    
     def print(self):
         print(self.data_set)
 

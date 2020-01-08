@@ -111,7 +111,7 @@ class BackPropService:
             for layer_index, layer in enumerate(model[1:]):
                 for neuron_index, neuron in enumerate(layer.neurons):
                     for w_index, w in enumerate(neuron.weights):
-                        w += self.momentum_alpha * self.DELTAS[layer_index][neuron_index][w_index]
+                        neuron.weights[w_index] += self.momentum_alpha * self.DELTAS[layer_index][neuron_index][w_index]
 
     def batch_ending(self):
         for matrix in self.DELTAS:

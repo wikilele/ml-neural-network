@@ -33,7 +33,7 @@ def cup(param_grid):
         epochs = params['epochs']
         batch_size = params['batch_size']
 
-        runs_number = 1
+        runs_number = 3
         for run in range(runs_number):
             nn.from_parameters(params, 'sigmoid', 'linear')
             model = nn.build()
@@ -71,8 +71,8 @@ def cup(param_grid):
         res.add_result(avg_tr_mse[-1], avg_val_mse[-1], avg_tr_mee[-1], avg_val_mee[-1], params['batch_size'], params['weights_bound'], params['learning_rate'] , params['momentum_alpha'], params['regularization_lambda'], msepath)
         ms.clean()
 
-        res.add_result_header('mse_tr' , 'mse_val', 'mee_tr', 'mee_val', 'batch_s','weights', 'lr', 'm_alpha', 'r_lambda', 'path')     
-        res.save_results()
+    res.add_result_header('mse_tr' , 'mse_val', 'mee_tr', 'mee_val', 'batch_s','weights', 'lr', 'm_alpha', 'r_lambda', 'path')     
+    res.save_results()
 
    
 

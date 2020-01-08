@@ -32,3 +32,12 @@ class TestDataset(unittest.TestCase):
         ds.normalize(minv, maxv)
         
         assert np.array_equal(ds.data_set,np.array([ [1,[0.0,0.0,1.0],[0.0]] , [2,[0.5,0.25,0.5],[1.0]], [3,[1.0,1.0,0.0],[0.0]] ]) )
+    
+    def test_denormalize(self):
+        ds = Dataset(np.array([ [1,[-2,1,2],[1]] , [2,[1,1.5,1],[1.5]], [3,[4,3,0],[1]] ]))
+        minv, maxv = ds.get_min_max()
+
+        output = Dataset.denormalize( [ [1.0], [0.0]], minv, maxv)
+        
+        assert output[0][0] == 1.5
+        assert output[1][0] == 1.0
