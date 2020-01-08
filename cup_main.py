@@ -17,7 +17,9 @@ def cup(param_grid):
     # if we use hold out: validation set == 1/2 trainingset
    
     trainset, validationset = trainvalset.split(66.6/100)
-    trainset.normalize()
+    trainset.normalize(trainset = 1)
+    validationset.normalize(trainset = 0)
+    testset.normalize(trainset = 0)
 
     for params in ms.grid_search(param_grid):
         params['batch_size'] = params['batch_size'] if params['batch_size'] > 0 else trainset.size()
