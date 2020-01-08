@@ -53,5 +53,5 @@ def from_parameters(params, hidden_activation_func, output_activation_func):
             
     init_weights_random(weights_bound)
     learning_rate(l_rate,0)
-    momentum(momentum_alpha, use_nesterov=False)
+    momentum(momentum_alpha, params['use_nesterov'])
     regularization(regularization_lambda)
