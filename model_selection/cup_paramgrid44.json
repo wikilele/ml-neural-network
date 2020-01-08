@@ -1,6 +1,6 @@
 {   
     "epochs" : [30],
-    "batch_size" : [-11],
+    "batch_size" : [-1],
     "weights_bound" : [0.00009],
     "learning_rate" : [0.1],
     "momentum_alpha" : [0.7],

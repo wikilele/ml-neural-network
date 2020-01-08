@@ -74,8 +74,6 @@ def cup(param_grid):
     res.add_result_header('mse_tr' , 'mse_val', 'mee_tr', 'mee_val', 'batch_s','weights', 'lr', 'm_alpha', 'r_lambda', 'path')     
     res.save_results()
 
-   
-
 
 if __name__ == '__main__':
     if sys.argv[1]:
