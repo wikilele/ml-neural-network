@@ -19,10 +19,7 @@ def cup(param_grid):
     # to have more data
     trainset, testset = dataset.split(75/100) 
     # data normalization
-    min_val, max_val = trainset.get_min_max()
-    trainset.normalize(min_val, max_val)
-    testset.normalize(min_val, max_val)
-
+    
     params = next(ms.grid_search(param_grid))
     print(params)
     params['batch_size'] = params['batch_size'] if params['batch_size'] > 0 else trainset.size()
@@ -83,14 +80,39 @@ def cup(param_grid):
                 avg_outputs.append([mean(tmp_real_outputs_x), mean(tmp_real_outputs_y)])
 
     metrics = ms.get_metrics()
-    target_outputs = [ x[0] for x in testset.data_set[:,2]]
-
     mse = metrics.mean_square_error(avg_outputs, testset.data_set[:,2])
     mee = metrics.mean_euclidian_error(avg_outputs, testset.data_set[:,2])
 
     print("MSE " + str(mse))
     print("MEE " + str(mee))
 
+    blindds = ds.load_blind('datasets/ML-CUP19-TS.csv','CUP')
+
+    avg_outputs = []
+    for batch in blindds.batch(1):
+        for pattern in batch:
+            tmp_real_outputs_x = []
+            tmp_real_outputs_y = []
+            for m in trained_models:
+                real_out = m.feed_forward(pattern[1])
+                tmp_real_outputs_x.append(real_out[0])
+                tmp_real_outputs_y.append(real_out[1])
+
+                # we get the average output to compute the error
+                avg_outputs.append([mean(tmp_real_outputs_x), mean(tmp_real_outputs_y)])
+
+    with open("report/poxebur_wikilele_ML-CUP-TS.csv", "a+") as cupfile:
+        # cleaning the file
+        cupfile.seek(0)
+        cupfile.truncate()
+
+        cupfile.write("# Leonardo Frioli Luigi Quarantiello \n")
+        cupfile.write("# poxebur_wikilele \n")
+        cupfile.write("# ML-CUP19 \n")
+        cupfile.write("# 10/01/2020 \n")
+
+        for i in range(len(avg_outputs)):
+            cupfile.write(str(i +1) + ", " + str(avg_outputs[i][0]) + ", " +  str(avg_outputs[i][1]) + "\n")
 
 if __name__ == '__main__':
     if sys.argv[1]:

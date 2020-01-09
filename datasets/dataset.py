@@ -76,7 +76,7 @@ class Dataset():
     def normalize(self, min_values, max_values):
         self._normalize(1, min_values[0], max_values[0])
         self._normalize(2, min_values[1], max_values[1])
-    
+
     @staticmethod
     def denormalize( outputs, min_values, max_values):
 
@@ -137,5 +137,16 @@ class CupDataset:
     
         return Dataset(np.array(dataset))   
 
+    @staticmethod
+    def load_blind(datapath):
+        dataset = []
+        with open(datapath, 'r') as file:
+            for i,line in enumerate(file):
+                targets = []
+                words_list = line.strip().split(',')
+                id = words_list[0]
+                inputs = list(map(float,words_list[1:21]))
 
-
+                dataset.append((id,inputs))
+    
+        return Dataset(np.array(dataset))  
