@@ -1,8 +1,8 @@
 {   
-    "epochs" : [150],
+    "epochs" : [500],
     "batch_size" : [-1],
     "weights_bound" : [0.009],
-    "learning_rate" : [0.1],
+    "learning_rate" : [0.02],
     "momentum_alpha" : [0.7],
     "regularization_lambda" : [0.00005],
     "use_nesterov" : [0],

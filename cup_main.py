@@ -24,7 +24,7 @@ def cup(param_grid):
         epochs = params['epochs']
         batch_size = params['batch_size']
 
-        runs_number = 3
+        runs_number = 1
         for run in range(runs_number):
             nn.from_parameters(params, 'sigmoid', 'linear')
             model = nn.build()

@@ -1,6 +1,10 @@
 # ml-neural-network
 Machine Learning Project @UniPi
 
+# Exam done
+Suggestions from the professor
+- K-fold is needed
+- The model is in underfitting, it can be improved 
 
 # TO USE
 - **pandas** : può essere utile per il preprocessing dei dati (mean removal, decorrelation, covariance equalization)
