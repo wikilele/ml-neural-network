@@ -1,0 +1,18 @@
+# python stuff
+__pycache__
+.pytest_cache
+
+# datasets
+monks-1.train
+monks-1.test
+ML-CUP19-TR.csv
+datasets/.~lock.ML-CUP19-TR.csv#
+
+# results
+~results/plots
+~results/__init__.py
+
+results/plots/*
+results/*/*.csv
+clean_results.py
+results/monks*

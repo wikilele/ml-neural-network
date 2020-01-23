@@ -1,0 +1,37 @@
+[{
+    "epochs" : [600],
+    "batch_size" : [-1],
+    "weights_bound" : [0.00009],
+    "learning_rate" : [0.14,0.1,0.08],
+    "momentum_alpha" : [0.7,0.5,0.3],
+    "regularization_lambda" : [0.01],
+
+    "input_layer_dim" : [20],
+    "hidden_layer_number" : [1],
+    "hidden_layer_dim" : [[3]],
+    "output_layer_dim" : [2] 
+},{
+    "epochs" : [600],
+    "batch_size" : [1],
+    "weights_bound" : [0.00009],
+    "learning_rate" : [0.14,0.1,0.08],
+    "momentum_alpha" : [0],
+    "regularization_lambda" : [0.01],
+
+    "input_layer_dim" : [20],
+    "hidden_layer_number" : [1],
+    "hidden_layer_dim" : [[3]],
+    "output_layer_dim" : [2] 
+},{
+    "epochs" : [600],
+    "batch_size" : [64,32],
+    "weights_bound" : [0.00009],
+    "learning_rate" : [0.14,0.1,0.08],
+    "momentum_alpha" : [0],
+    "regularization_lambda" : [0.01],
+
+    "input_layer_dim" : [20],
+    "hidden_layer_number" : [1],
+    "hidden_layer_dim" : [[3]],
+    "output_layer_dim" : [2] 
+}]

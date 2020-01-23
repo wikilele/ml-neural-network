@@ -1,0 +1,13 @@
+{   
+    "epochs" : [500],
+    "batch_size" : [1],
+    "weights_bound" : [0.000009],
+    "learning_rate" : [0.05],
+    "momentum_alpha" : [0],
+    "regularization_lambda" : [0],
+
+    "input_layer_dim" : [17],
+    "hidden_layer_number" : [1],
+    "hidden_layer_dim" : [[2]],
+    "output_layer_dim" : [1]   
+}
